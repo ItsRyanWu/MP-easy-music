@@ -1,0 +1,33 @@
+{
+  "pages":[
+    "pages/index/index",
+    "pages/logs/logs"
+  ],
+  "window":{
+    "backgroundColor": "#34495e",
+    "backgroundTextStyle":"dark",
+    "navigationBarBackgroundColor": "#e8eded",
+    "navigationBarTitleText": "薄荷音乐",
+    "navigationBarTextStyle":"black"
+  },
+  "tabBar":{
+    "color": "#b6c9c9",
+    "selectedColor": "#34495e",
+    "backgroundColor": "#e8eded",
+    "position": "top",
+    "list": [
+      {
+        "text": "综合搜索",
+        "pagePath": "pages/index/index"
+      },
+      {
+        "text": "正在播放",
+        "pagePath": "pages/logs/logs"
+      }
+    ]
+  },
+  "requiredBackgroundModes": [
+    "audio"
+  ],
+  "debug": true
+}

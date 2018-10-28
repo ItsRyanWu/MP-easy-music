@@ -1,0 +1,7 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="userinfo">
+    <button bindtap="testCloudMusic"> 获取信息 </button>
+      <text>{{motto}}</text>
+  </view>
+</view>
