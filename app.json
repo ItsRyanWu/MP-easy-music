@@ -1,28 +1,28 @@
 {
   "pages":[
     "pages/index/index",
-    "pages/logs/logs"
+    "pages/browser/browser"
   ],
   "window":{
-    "backgroundColor": "#34495e",
+    "backgroundColor": "#C7EBE6",
     "backgroundTextStyle":"dark",
-    "navigationBarBackgroundColor": "#e8eded",
-    "navigationBarTitleText": "薄荷音乐",
+    "navigationBarBackgroundColor": "#C7EBE6",
+    "navigationBarTitleText": "Mint Music",
     "navigationBarTextStyle":"black"
   },
   "tabBar":{
-    "color": "#b6c9c9",
-    "selectedColor": "#34495e",
-    "backgroundColor": "#e8eded",
+    "color": "#749595",
+    "selectedColor": "#000000",
+    "backgroundColor": "#C7EBE6",
     "position": "top",
     "list": [
       {
-        "text": "综合搜索",
+        "text": "正在播放",
         "pagePath": "pages/index/index"
       },
       {
-        "text": "正在播放",
-        "pagePath": "pages/logs/logs"
+        "text": "浏览曲库",
+        "pagePath": "pages/browser/browser"
       }
     ]
   },

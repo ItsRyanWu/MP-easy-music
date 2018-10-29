@@ -1,5 +1,9 @@
 //app.js
+const {faPlay} = require("./miniprogram_npm/@fortawesome/free-solid-svg-icons/index.js")
 App({
+    globalData: {
+        faPlay: faPlay
+    }
 //   onLaunch: function () {
     // 展示本地存储能力
     // var logs = wx.getStorageSync('logs') || []
@@ -33,7 +37,5 @@ App({
     //   }
     // })
 //   },
-//   globalData: {
-//     userInfo: null
-//   }
 })
+

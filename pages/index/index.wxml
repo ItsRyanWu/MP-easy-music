@@ -1,7 +1,15 @@
 <!--index.wxml-->
-<view class="container">
-  <view class="userinfo">
-    <button bindtap="testCloudMusic"> 获取信息 </button>
-      <text>{{motto}}</text>
-  </view>
+<view class="container fullScreen">
+    <view class="flexbox">
+        <image class="albumImage" src="{{albumImageSrc}}" mode="aspectFill" lazy-load="false" binderror="" bindload=""></image>
+        <text class="song" >{{song}}</text>
+        <text class="singer" >{{singer}}</text>
+        <text class="album" >{{album}}</text>
+        <view>
+            <!-- <icon class="" size="23" color="">
+                {{faPlay.icon}}
+            </icon> -->
+        </view>
+    </view>
+    <input class="searchBox" type="text" placeholder="搜点儿你想听的..." cursor-spacing="20" placeholder-class="input-placeholder" maxlength="20" confirm-type="search" bindconfirm="switchTabToBrowser"></input>
 </view>

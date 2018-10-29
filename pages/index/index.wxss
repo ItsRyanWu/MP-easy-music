@@ -1,1 +1,36 @@
 /**index.wxss**/
+.flexbox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.albumImage {
+    width: 60vw;
+    height: 60vw;
+    border-radius: 50%;
+    box-shadow: 0rpx 30rpx 40rpx -20rpx rgba(95, 95, 95, 0.3);
+}
+.searchBox {
+    width: 70%;
+    height: 100rpx;
+    position: fixed;
+    bottom: 60rpx;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0 50rpx;
+    border-radius: 100rpx;
+    background-color: white;
+    box-shadow: 0rpx 30rpx 40rpx -20rpx rgba(95, 95, 95, 0.3);
+}
+.input-placeholder {
+    font-size: 30rpx;
+    color: #B0BFBF;
+}
+.song {
+    font-size: 50rpx;
+    font-weight: bold;
+}
+.singer, .album {
+    font-size: 30rpx;
+    color: #8E8E93;
+}

@@ -1,32 +1,50 @@
 //index.js
 //获取应用实例
 const app = getApp()
-
 Page({
-  data: {
-    motto: null
-  },
-  testCloudMusic(){
-      let options = {
-        url: 'https://zeyun.org:3443/search?keywords=永不失联的爱',
-        // data: '',
-        header: {'content-type':'application/json'},
-        method: 'GET',
-        dataType: 'json',
-        responseType: 'text',
-        success(result){
-            console.log(result.data);
-            this.setData({motto: result.data});
-        },
-        fail(err){
-            console.log(`req 错误：${err}`);
-        },
-        complete(){
-            console.log('请求 complete');
+    data: {
+        albumImageSrc: 'http://p2.music.126.net/ACPwGpJZxmGKnM3rWilemA==/109951163083048605.jpg',
+        song: '用不失联的爱',
+        singer: '周兴哲',
+        album: '如果雨之后',
+        faPlay: app.globalData.faPlay
+    },
+    testCloudMusic(){
+        let options = {
+          url: 'https://zeyun.org:3443/search?keywords=永不失联的爱',
+          // data: '',
+          header: {'content-type':'application/json'},
+          method: 'GET',
+          dataType: 'json',
+          responseType: 'text',
+          success:(result)=>{
+                console.log(result.data);
+                this.setData({motto: result.data});
+          },
+          fail(err){
+                console.log(`req 错误：${err}`);
+          },
+          complete(){
+                console.log('请求 complete');
+          }
         }
-      }
-      wx.request(options);
-  }
+        wx.request(options);
+    },
+    switchTabToBrowser(){
+        wx.switchTab({
+            url: `../browser/browser`,
+            success: (result)=>{
+                console.log(`切换 tab 成功 ${result}`)
+            },
+            fail: (err)=>{
+                console.log(`切换 tab 失败 ${err}`)
+            },
+            complete: ()=>{}
+        });
+    },
+    onShow() {
+        console.log(this.data.faPlay)
+    }
   //事件处理函数
 //   bindViewTap: function() {
 //     wx.navigateTo({
