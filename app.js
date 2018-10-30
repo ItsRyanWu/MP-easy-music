@@ -2,7 +2,36 @@
 // const {faPlay} = require("./miniprogram_npm/@fortawesome/free-solid-svg-icons/index.js")
 App({
     globalData: {
-        searchBarValue: null
+        searchBarValue: null,
+        NEMusic: null
+    },
+    onLaunch(){
+        wx.request({
+            url: 'https://zeyun.org:3443/top/list?idx=0',
+            header: {'content-type':'application/json'},
+            method: 'GET',
+            dataType: 'json',
+            responseType: 'text',
+            success: (result)=>{
+                this.globalData.NEMusic=result.data.playlist.tracks;
+                // console.log(this.globalData.NEMusic)
+            },
+            fail: (e)=>{
+                wx.showToast({
+                    title: e.errMsg,
+                    icon: 'none',
+                    image: '',
+                    duration: 1500,
+                    mask: false,
+                    success: (result)=>{
+                        
+                    },
+                    fail: ()=>{},
+                    complete: ()=>{}
+                });
+            },
+            complete: ()=>{}
+        });
     }
 //   onLaunch: function () {
     // 展示本地存储能力

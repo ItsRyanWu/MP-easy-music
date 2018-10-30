@@ -40,7 +40,7 @@ Page({
     },
     switchContainerToBlur(){
         // 激活 serchBar 时 blur 主页面
-        this.setData({containerBlur: 'blur(10rpx)'});
+        this.setData({containerBlur: 'blur(15rpx)'});
     },
     switchContainerToNormal(){
         // 取消激活 serchBar 时取消 blur 主页面

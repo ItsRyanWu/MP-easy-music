@@ -1,5 +1,28 @@
 <!--logs.wxml-->
-<view class="container log-list">
+<view class="container">
+    <view class="header">
+        <text class="header--musicSource header--musicSource__active">网易云音乐</text>
+        <text class="header--musicSource">QQ 音乐</text>
+    </view>
+    <view class="listCard">
+        <view wx:for="{{NEMusic}}" class="listCard--single">
+            <!-- <text>
+                {{index+1}}
+            </text> -->
+            <view class="listCard--single--song" selectable="true">
+                {{item.name}}
+            </view>
+            <view class="listCard--single--subInfo">
+                <view wx:for="{{item.ar}}" class="listCard--single--artist--single">
+                    {{item.name}}
+                </view>
+                -
+                <view class="listCard--single--album">
+                    {{item.al.name}}
+                </view>
+            </view>
+        </view>
+    </view>
     <input class="searchBox" type="text" placeholder="搜点儿你想听的..." cursor-spacing="20" placeholder-class="input-placeholder" maxlength="20" confirm-type="search" 
     value="{{searchBarValue}}"></input>
 </view>

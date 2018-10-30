@@ -1,8 +1,58 @@
-.log-list {
-  display: flex;
-  flex-direction: column;
-  padding: 40rpx;
+.container {
+    padding-top: 0; 
 }
-.log-item {
-  margin: 10rpx;
+.header {
+    height: 100rpx;
+    text-align: center;
+}
+.header--musicSource {
+    font-size: 30rpx;
+    color: #8E8E93;
+    font-weight: bold;
+    line-height: 100rpx;
+}
+.header--musicSource:not(:first-child) {
+    margin-left: 40rpx;
+}
+
+.header--musicSource__active {
+    color: black;
+}
+
+.listCard {
+    min-height: 100vh;
+    background-color: white;
+    border-radius: 50rpx;
+    padding: 20rpx;
+    overflow: visible;
+}
+
+.listCard--single {
+    position: relative;
+    min-height: 120rpx;
+    padding: 10rpx 40rpx;
+}
+
+.listCard--single:not(:first-child){
+    border-top: 1px solid #D1D1D6;
+}
+
+.listCard--single--song {
+    margin-top: 15rpx;
+}
+.listCard--single--subInfo {
+    font-size: 25rpx;
+    margin-top: 10rpx;
+    color: #8E8E93;
+}
+.listCard--single--artist--single, .listCard--single--album {
+    display: inline-block;
+}
+.listCard--single--artist--single:not(:first-child) {
+    margin-left: 3rpx;
+}
+.listCard--single--artist--single:not(:first-child)::before {
+    content: '/';
+    position: relative;
+    left: 2rpx;
 }

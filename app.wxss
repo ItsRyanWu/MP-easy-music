@@ -6,10 +6,6 @@
   background-color: #ECEFF2;
 } 
 
-.blur {
-    filter: blur(5rpx);
-}
-
 .fullScreen {
     height: 100vh;
 }

@@ -2,7 +2,11 @@
 const app = getApp()
 Page({
     data: {
-        searchBarValue: null
+        searchBarValue: null,
+        NEMusic: null
+    },
+    onReady(){
+        this.setData({NEMusic: app.globalData.NEMusic})
     },
     onShow(){
         // 显示该页时同步 globalData 的 searchBar 值
