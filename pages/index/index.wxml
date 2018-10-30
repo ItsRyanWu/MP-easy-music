@@ -1,15 +1,22 @@
 <!--index.wxml-->
 <view class="container fullScreen">
-    <view class="flexbox">
-        <image class="albumImage" src="{{albumImageSrc}}" mode="aspectFill" lazy-load="false" binderror="" bindload=""></image>
-        <text class="song" >{{song}}</text>
-        <text class="singer" >{{singer}}</text>
-        <text class="album" >{{album}}</text>
-        <view>
-            <!-- <icon class="" size="23" color="">
-                {{faPlay.icon}}
-            </icon> -->
+    <view class="flexContainer" style="filter:{{containerBlur}}">
+        <view class="albumImage">
+            <image class="albumImage--image" src="{{albumImageSrc}}" mode="aspectFill"></image>
+        </view>
+        <view class="musicInfo">
+            <text class="musicInfo--song" >{{song}}</text>
+            <text class="musicInfo--singer" >{{singer}}</text>
+            <text class="musicInfo--album" >{{album}}</text>
+        </view>
+        <view class="controlButton">
+            <view class="controlButton--container">
+                <image class="controlButton--container--backward" src="/img/backward-solid.svg" mode="aspectFit"></image>
+                <image class="controlButton--container--play" src="/img/play-solid.svg" mode="aspectFit"></image>
+                <image class="controlButton--container--forward" src="/img/forward-solid.svg" mode="aspectFit"></image>
+            </view>
         </view>
     </view>
-    <input class="searchBox" type="text" placeholder="搜点儿你想听的..." cursor-spacing="20" placeholder-class="input-placeholder" maxlength="20" confirm-type="search" bindconfirm="switchTabToBrowser"></input>
+    <input class="searchBox" type="text" value="{{searchBarValue}}" placeholder="搜点儿你想听的..." cursor-spacing="20" placeholder-class="input-placeholder" maxlength="20" confirm-type="search" 
+    bindconfirm="switchTabToBrowser" bindfocus="switchContainerToBlur" bindblur="switchContainerToNormal" bindinput="syncValueToGlobalData"></input>
 </view>

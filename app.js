@@ -1,8 +1,8 @@
 //app.js
-const {faPlay} = require("./miniprogram_npm/@fortawesome/free-solid-svg-icons/index.js")
+// const {faPlay} = require("./miniprogram_npm/@fortawesome/free-solid-svg-icons/index.js")
 App({
     globalData: {
-        faPlay: faPlay
+        searchBarValue: null
     }
 //   onLaunch: function () {
     // 展示本地存储能力

@@ -4,7 +4,6 @@
     "pages/browser/browser"
   ],
   "window":{
-    "backgroundColor": "#C7EBE6",
     "backgroundTextStyle":"dark",
     "navigationBarBackgroundColor": "#C7EBE6",
     "navigationBarTitleText": "Mint Music",
@@ -21,7 +20,7 @@
         "pagePath": "pages/index/index"
       },
       {
-        "text": "浏览曲库",
+        "text": "音乐库",
         "pagePath": "pages/browser/browser"
       }
     ]

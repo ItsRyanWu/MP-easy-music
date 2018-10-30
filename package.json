@@ -13,8 +13,5 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@fortawesome/free-brands-svg-icons": "^5.4.2",
-    "@fortawesome/free-regular-svg-icons": "^5.4.2",
-    "@fortawesome/free-solid-svg-icons": "^5.4.2"
   }
 }

@@ -1,36 +1,64 @@
 /**index.wxss**/
-.flexbox {
+.flexContainer {
     display: flex;
+    grid-template-rows: 60% 13% 3% 15%;
     flex-direction: column;
+    justify-content: space-between;
     align-items: center;
+    height: 82vh;
+    transition: filter .2s linear;
 }
 .albumImage {
-    width: 60vw;
-    height: 60vw;
-    border-radius: 50%;
-    box-shadow: 0rpx 30rpx 40rpx -20rpx rgba(95, 95, 95, 0.3);
+    position: relative;
+    flex-basis: 60%;
 }
-.searchBox {
-    width: 70%;
-    height: 100rpx;
-    position: fixed;
-    bottom: 60rpx;
+.albumImage--image {
+    position: absolute;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
-    padding: 0 50rpx;
-    border-radius: 100rpx;
-    background-color: white;
-    box-shadow: 0rpx 30rpx 40rpx -20rpx rgba(95, 95, 95, 0.3);
+    border: 2px solid white;
+    transform: translate(-50%, -50%);
+    width: 65vw;
+    height: 65vw;
+    border-radius: 50%;
+    box-shadow: 0rpx 40rpx 40rpx -20rpx rgba(95, 95, 95, 0.4);
 }
-.input-placeholder {
-    font-size: 30rpx;
-    color: #B0BFBF;
+.musicInfo {
+    position: relative;
+    flex-basis: 25%;
 }
-.song {
+.musicInfo--song {
     font-size: 50rpx;
     font-weight: bold;
+    display: block;
+    text-align: center;
+    line-height: 120rpx;
 }
-.singer, .album {
+.musicInfo--singer, .musicInfo--album {
     font-size: 30rpx;
     color: #8E8E93;
+    display: block;
+    text-align: center;
+    line-height: 60rpx;
+}
+.controlButton {
+    position: relative;
+    flex-basis: 15%;
+}
+.controlButton--container {
+    position: absolute;
+    width: 100vw;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align:center;
+}
+.controlButton--container--forward, .controlButton--container--backward {
+    width: 70rpx;
+    height: 70rpx;
+}
+.controlButton--container--play {
+    width: 80rpx;
+    height: 80rpx;
+    margin: 0 100rpx;
 }

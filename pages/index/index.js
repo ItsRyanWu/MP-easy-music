@@ -4,15 +4,15 @@ const app = getApp()
 Page({
     data: {
         albumImageSrc: 'http://p2.music.126.net/ACPwGpJZxmGKnM3rWilemA==/109951163083048605.jpg',
-        song: '用不失联的爱',
+        song: '永不失联的爱',
         singer: '周兴哲',
         album: '如果雨之后',
-        faPlay: app.globalData.faPlay
+        containerBlur: null,
+        searchBarValue: null
     },
     testCloudMusic(){
         let options = {
           url: 'https://zeyun.org:3443/search?keywords=永不失联的爱',
-          // data: '',
           header: {'content-type':'application/json'},
           method: 'GET',
           dataType: 'json',
@@ -30,61 +30,29 @@ Page({
         }
         wx.request(options);
     },
+    onShow(){
+        // 显示首页时清空 serchBar 值 
+        app.globalData.searchBarValue = null;
+    },
+    onHide(){
+        // 离开首页时清空该页 serchBar 值 
+        this.setData({searchBarValue: null});
+    },
+    switchContainerToBlur(){
+        // 激活 serchBar 时 blur 主页面
+        this.setData({containerBlur: 'blur(10rpx)'});
+    },
+    switchContainerToNormal(){
+        // 取消激活 serchBar 时取消 blur 主页面
+        this.setData({containerBlur: null});
+    },
     switchTabToBrowser(){
         wx.switchTab({
-            url: `../browser/browser`,
-            success: (result)=>{
-                console.log(`切换 tab 成功 ${result}`)
-            },
-            fail: (err)=>{
-                console.log(`切换 tab 失败 ${err}`)
-            },
-            complete: ()=>{}
+            url: `../browser/browser`
         });
     },
-    onShow() {
-        console.log(this.data.faPlay)
+    syncValueToGlobalData(e){
+        // 监听输入事件同步 serchBar 值至全局变量
+        app.globalData.searchBarValue = e.detail.value;
     }
-  //事件处理函数
-//   bindViewTap: function() {
-//     wx.navigateTo({
-//       url: '../logs/logs'
-//     })
-//   },
-//   onLoad: function () {
-//     if (app.globalData.userInfo) {
-//       this.setData({
-//         userInfo: app.globalData.userInfo,
-//         hasUserInfo: true
-//       })
-//     } else if (this.data.canIUse){
-//       // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-//       // 所以此处加入 callback 以防止这种情况
-//       app.userInfoReadyCallback = res => {
-//         this.setData({
-//           userInfo: res.userInfo,
-//           hasUserInfo: true
-//         })
-//       }
-//     } else {
-//       // 在没有 open-type=getUserInfo 版本的兼容处理
-//       wx.getUserInfo({
-//         success: res => {
-//           app.globalData.userInfo = res.userInfo
-//           this.setData({
-//             userInfo: res.userInfo,
-//             hasUserInfo: true
-//           })
-//         }
-//       })
-//     }
-//   },
-//   getUserInfo: function(e) {
-//     console.log(e)
-//     app.globalData.userInfo = e.detail.userInfo
-//     this.setData({
-//       userInfo: e.detail.userInfo,
-//       hasUserInfo: true
-//     })
-//   }
 })

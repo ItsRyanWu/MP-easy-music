@@ -1,6 +1,5 @@
 <!--logs.wxml-->
 <view class="container log-list">
-  <block wx:for="{{logs}}" wx:for-item="log">
-    <text class="log-item">{{index + 1}}. {{log}}</text>
-  </block>
+    <input class="searchBox" type="text" placeholder="搜点儿你想听的..." cursor-spacing="20" placeholder-class="input-placeholder" maxlength="20" confirm-type="search" 
+    value="{{searchBarValue}}"></input>
 </view>
