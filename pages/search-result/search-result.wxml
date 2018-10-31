@@ -9,9 +9,10 @@
         </view>
     </view>
     <view class="listCard" style="filter:{{containerBlur}}">
-        <!-- 正在搜索情况下显示缓冲画面 -->
-        <view hidden="{{!isSearching}}">
-            <text>搜索中...</text>
+        <!-- 缓冲画面 -->
+        <view hidden="{{!isSearching}}" wx:for="{{[1,2,3,4,5,6,7,8,9,10]}}"  class="loading-listCard--single">
+            <view class="loading-listCard--single--song"></view>
+            <view class="loading-listCard--single--subInfo"></view>
         </view>
         <!-- 搜索情况下显示搜索结果 -->
         <view hidden="{{!NEMusic_SearchResult||isSearching}}" wx:for="{{NEMusic_SearchResult}}" class="listCard--single">

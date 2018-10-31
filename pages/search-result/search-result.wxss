@@ -53,7 +53,6 @@
     overflow: visible;
     transition: filter .2s linear .1s;
 }
-
 .listCard--single {
     position: relative;
     min-height: 120rpx;

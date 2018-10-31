@@ -22,3 +22,22 @@
     font-size: 30rpx;
     color: #B0BFBF;
 }
+.loading-listCard--single {
+    height: 120rpx;
+    padding: 10rpx 40rpx;
+}
+.loadinglistCard--single:not(:last-child){
+    border-bottom: 1px solid #D1D1D6;
+}
+.loading-listCard--single--song {
+    margin-top: 25rpx;
+    height: 50rpx;
+    width: 70%;
+    background: #f3f5f7;
+}
+.loading-listCard--single--subInfo {
+    margin-top: 20rpx;
+    height: 30rpx;
+    width: 35%;
+    background: #f3f5f7;
+}

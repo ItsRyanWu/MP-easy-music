@@ -9,6 +9,11 @@
         </view>
     </view>
     <view class="listCard" style="filter:{{containerBlur}}">
+        <!-- 缓冲画面 -->
+        <view hidden="{{NEMusic_NewSongChart}}" wx:for="{{[1,2,3,4,5,6,7,8,9,10]}}"  class="loading-listCard--single">
+            <view class="loading-listCard--single--song"></view>
+            <view class="loading-listCard--single--subInfo"></view>
+        </view>
         <view wx:for="{{NEMusic_NewSongChart}}" class="listCard--single">
             <view class="listCard--single--song" selectable="true">
                 {{item.name}}
