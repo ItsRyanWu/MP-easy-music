@@ -12,33 +12,13 @@ Page({
         searchBarValue: null,
         isFocus: false
     },
-    testCloudMusic(){
-        let options = {
-          url: 'https://zeyun.org:3443/search?keywords=永不失联的爱',
-          header: {'content-type':'application/json'},
-          method: 'GET',
-          dataType: 'json',
-          responseType: 'text',
-          success:(result)=>{
-                console.log(result.data);
-                this.setData({motto: result.data});
-          },
-          fail(err){
-                console.log(`req 错误：${err}`);
-          },
-          complete(){
-                console.log('请求 complete');
-          }
-        }
-        wx.request(options);
-    },
-    onHide(){
-        // 离开首页时清空该页 serchBar 值 
-        this.setData({searchBarValue: null});
+    onShow(){
+        // 显示该页时同步 globalData 的 searchBar 值
+        this.setData({searchBarValue: app.globalData.searchBarValue});
     },
     switchToSearchStatus(){
         // 激活 serchBar 时向上移动方便打字
-        this.setData({searchBarBottom: '70%'})
+        this.setData({searchBarBottom: '80%'})
         // 激活 serchBar 时 blur 主页面
         this.setData({containerBlur: 'blur(13rpx)'});
         this.setData({isFocus: true})
@@ -52,32 +32,32 @@ Page({
         // 如果搜索栏为空则清空所有搜索数据，初始化为未搜索状态
         if (!app.globalData.searchBarValue || /^\s*$/.test(app.globalData.searchBarValue)) {
             console.log('搜索栏已空，清除所有搜索数据');
-            wx.removeStorageSync('NEMusic_SearchResult');
-            this.setData({searchBarValue: null, NEMusic_SearchResult: ''})
+            // wx.removeStorageSync('NEMusic_SearchResult');
+            this.setData({searchBarValue: null})
         }
     },
-    switchTabToBrowser(){
-        wx.switchTab({
-            url: `../browser/browser`,
+    syncValueToGlobalData(event){
+        // 监听输入事件同步 searchBar 值至全局变量
+        app.globalData.searchBarValue = event.detail.value;
+    },
+    navigateToSearchResult(){
+        wx.navigateTo({
+            url: `../search-result/search-result`,
             success(){
-                let currentPages =  getCurrentPages();
-                if (currentPages[currentPages.length-1].route === 'pages/browser/browser'){
-                    let browser = currentPages[currentPages.length-1];
-                    browser.setData({isSearching: true})
+                let currentPages = getCurrentPages();
+                if (currentPages[currentPages.length-1].route === 'pages/search-result/search-result'){
+                    let searchResult = currentPages[currentPages.length-1];
+                    searchResult.setData({isSearching: true})
                 } else {
-                    console.log('currentPages 不是 browser')
+                    console.log('currentPages 不是 search-result')
                 }
             }
         });
     },
-    syncValueToGlobalData(e){
-        // 监听输入事件同步 serchBar 值至全局变量
-        app.globalData.searchBarValue = e.detail.value;
-    },
-    startSearchingAndSwitchingTab(){
+    startSearchingAndNavigatingToSearchResult(){
         let searchKeyWord = app.globalData.searchBarValue;
         if (!searchKeyWord || /^\s*$/.test(searchKeyWord)) return;
-        this.switchTabToBrowser();
+        this.navigateToSearchResult();
         app.startSearchingContent(searchKeyWord);
     }
 })

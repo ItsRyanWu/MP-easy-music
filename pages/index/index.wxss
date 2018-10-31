@@ -12,7 +12,7 @@ page {
     justify-content: space-between;
     align-items: center;
     height: 85%;
-    transition: filter .3s linear .2s;
+    transition: filter .2s linear .1s;
 }
 .albumImage {
     position: relative;

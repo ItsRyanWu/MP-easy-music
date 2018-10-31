@@ -18,5 +18,5 @@
         </view>
     </view>
     <input class="searchBox" style="bottom:{{searchBarBottom}}" type="text" value="{{searchBarValue}}" placeholder="同时搜索「网易云音乐」与「QQ 音乐」" cursor-spacing="20" placeholder-class="input-placeholder" maxlength="20" confirm-type="search" 
-    adjust-position="{{false}}" focus="{{isFocus}}"  bindconfirm="startSearchingAndSwitchingTab" bindtouchstart="switchToSearchStatus" bindblur="switchToNormalStatus" bindinput="syncValueToGlobalData"></input>
+    adjust-position="{{false}}" focus="{{isFocus}}"  bindconfirm="startSearchingAndNavigatingToSearchResult" bindtap="switchToSearchStatus" bindblur="switchToNormalStatus" bindinput="syncValueToGlobalData"></input>
 </view>

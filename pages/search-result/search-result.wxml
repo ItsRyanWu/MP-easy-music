@@ -1,7 +1,7 @@
 <view class="container">
     <view class="header" style="filter:{{containerBlur}}">
         <view class="header--chart">
-            <text class="header--chart--single">新歌榜</text>
+            <text class="header--chart--single">搜索结果</text>
         </view>
         <view class="header--musicSource">
             <text class="header--musicSource--single active">网易云音乐</text>
@@ -9,21 +9,26 @@
         </view>
     </view>
     <view class="listCard" style="filter:{{containerBlur}}">
-        <view wx:for="{{NEMusic_NewSongChart}}" class="listCard--single">
+        <!-- 正在搜索情况下显示缓冲画面 -->
+        <view hidden="{{!isSearching}}">
+            <text>搜索中...</text>
+        </view>
+        <!-- 搜索情况下显示搜索结果 -->
+        <view hidden="{{!NEMusic_SearchResult||isSearching}}" wx:for="{{NEMusic_SearchResult}}" class="listCard--single">
             <view class="listCard--single--song" selectable="true">
                 {{item.name}}
             </view>
             <view class="listCard--single--subInfo">
-                <view wx:for="{{item.ar}}" class="listCard--single--artist--single">
+                <view wx:for="{{item.artists}}" class="listCard--single--artist--single">
                     {{item.name}}
                 </view>
                 -
                 <view class="listCard--single--album">
-                    {{item.al.name}}
+                    {{item.album.name}}
                 </view>
             </view>
         </view>
     </view>
     <input class="searchBox" style="bottom:{{searchBarBottom}}" type="text" value="{{searchBarValue}}" placeholder="同时搜索「网易云音乐」与「QQ 音乐」" cursor-spacing="20" placeholder-class="input-placeholder" maxlength="20" confirm-type="search" 
-    adjust-position="{{false}}" focus="{{isFocus}}" bindconfirm="startSearchingAndNavigatingToSearchResult" bindtap="switchToSearchStatus" bindblur="switchToNormalStatus" bindinput="syncValueToGlobalData"></input>
+    adjust-position="{{false}}" focus="{{isFocus}}" bindconfirm="startSearchingContent" bindtap="switchToSearchStatus" bindblur="switchToNormalStatus" bindinput="syncValueToGlobalData"></input>
 </view>

@@ -1,7 +1,8 @@
 {
   "pages":[
     "pages/index/index",
-    "pages/browser/browser"
+    "pages/browser/browser",
+    "pages/search-result/search-result"
   ],
   "window":{
     "backgroundTextStyle":"dark",

@@ -27,28 +27,28 @@ export const startSearchingContent = (searchKeyWord) => {
             console.log(`数据请求完成：搜索关键词 ${searchKeyWord}`);
             let searchResult = result.data.result.songs;
             // 将数据存入缓存
-            wx.setStorage({
-                key: 'NEMusic_SearchResult',
-                data: searchResult,
-                success: ()=>{
-                    console.log(`数据储存完成：搜索关键词 ${searchKeyWord} `)
+            // wx.setStorage({
+            //     key: 'NEMusic_SearchResult',
+            //     data: searchResult,
+            //     success: ()=>{
+            //         console.log(`数据储存完成：搜索关键词 ${searchKeyWord} `)
                     // console.log(wx.getStorageInfoSync());
                     // console.log(wx.getStorageSync('NEMusic_SearchResult')) 
-                },
-                fail: (err)=>{
-                    console.error(`数据储存失败：搜索关键词 ${searchKeyWord} ${err.errMsg}`)
-                },
-                complete: ()=>{
-                    let currentPages =  getCurrentPages();
-                    if (currentPages[currentPages.length-1].route === 'pages/browser/browser'){
-                        let browser = currentPages[currentPages.length-1];
-                        let searchResultInStorage = wx.getStorageSync('NEMusic_SearchResult'); 
-                        browser.setData({isSearching: false, NEMusic_SearchResult: searchResultInStorage})
+                // },
+                // fail: (err)=>{
+                //     console.error(`数据储存失败：搜索关键词 ${searchKeyWord} ${err.errMsg}`)
+                // },
+                // complete: ()=>{
+                    let currentPages = getCurrentPages();
+                    if (currentPages[currentPages.length-1].route === 'pages/search-result/search-result'){
+                        let searchResultPage = currentPages[currentPages.length-1];
+                        // let searchResultInStorage = wx.getStorageSync('NEMusic_SearchResult'); 
+                        searchResultPage.setData({isSearching: false, NEMusic_SearchResult: searchResult})
                     } else {
-                        console.log('currentPages 不是 browser')
+                        console.log('currentPages 不是 search-result')
                     }
-                }
-            });
+                // }
+            // });
         },
         fail: (err)=>{
             console.error(`数据请求失败：搜索关键词 ${searchKeyWord} ${err.errMsg}`)
