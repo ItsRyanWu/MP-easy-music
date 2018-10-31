@@ -1,9 +1,8 @@
+var utils = require('/utils/util');
 //app.js
-// const {faPlay} = require("./miniprogram_npm/@fortawesome/free-solid-svg-icons/index.js")
 App({
     globalData: {
-        searchBarValue: null,
-        NEMusic: null
+        searchBarValue: null
     },
     onLaunch(){
         wx.request({
@@ -13,26 +12,25 @@ App({
             dataType: 'json',
             responseType: 'text',
             success: (result)=>{
-                this.globalData.NEMusic=result.data.playlist.tracks;
-                // console.log(this.globalData.NEMusic)
-            },
-            fail: (e)=>{
-                wx.showToast({
-                    title: e.errMsg,
-                    icon: 'none',
-                    image: '',
-                    duration: 1500,
-                    mask: false,
-                    success: (result)=>{
-                        
+                console.log('数据请求完成：网易云音乐新歌榜')
+                wx.setStorage({
+                    key: 'NEMusic_NewSongChart',
+                    data: result.data.playlist.tracks,
+                    success: ()=>{
+                        console.log('数据储存完成：网易云音乐新歌榜')
                     },
-                    fail: ()=>{},
+                    fail: (err)=>{
+                        console.error(`数据储存失败：网易云音乐新歌榜 ${err.errMsg}`)
+                    },
                     complete: ()=>{}
                 });
             },
-            complete: ()=>{}
+            fail: (err)=>{
+                console.error(`数据请求失败：网易云音乐新歌榜 ${err.errMsg}`)
+            }
         });
-    }
+    },
+    startSearchingContent: utils.startSearchingContent
 //   onLaunch: function () {
     // 展示本地存储能力
     // var logs = wx.getStorageSync('logs') || []

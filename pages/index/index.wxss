@@ -1,12 +1,18 @@
 /**index.wxss**/
+page {
+    height: 100%;
+}
+.container {
+    height: 100%;
+}
 .flexContainer {
     display: flex;
     grid-template-rows: 60% 13% 3% 15%;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    height: 82vh;
-    transition: filter .3s linear;
+    height: 85%;
+    transition: filter .3s linear .2s;
 }
 .albumImage {
     position: relative;

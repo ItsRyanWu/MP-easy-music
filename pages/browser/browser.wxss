@@ -1,18 +1,34 @@
 .container {
     padding-top: 0; 
 }
+.searchBox {
+    border: 1px solid #ECEFF2;
+}
 .header {
     height: 100rpx;
-    text-align: center;
+    padding: 0 60rpx;
+    transition: filter .3s linear .2s;
 }
 .header--musicSource {
     font-size: 30rpx;
     color: #8E8E93;
     font-weight: bold;
     line-height: 100rpx;
+    position: relative;
 }
 .header--musicSource:not(:first-child) {
     margin-left: 40rpx;
+}
+
+.header--musicSource:first-child::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 5rpx;
+    bottom: -5rpx;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ff5252;
 }
 
 .header--musicSource__active {
@@ -25,6 +41,7 @@
     border-radius: 50rpx;
     padding: 20rpx;
     overflow: visible;
+    transition: filter .3s linear .2s;
 }
 
 .listCard--single {
@@ -33,12 +50,13 @@
     padding: 10rpx 40rpx;
 }
 
-.listCard--single:not(:first-child){
-    border-top: 1px solid #D1D1D6;
+.listCard--single:not(:last-child){
+    border-bottom: 1px solid #D1D1D6;
 }
 
 .listCard--single--song {
     margin-top: 15rpx;
+    font-weight: bold;
 }
 .listCard--single--subInfo {
     font-size: 25rpx;

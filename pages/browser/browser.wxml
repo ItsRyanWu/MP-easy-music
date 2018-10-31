@@ -1,14 +1,18 @@
 <!--logs.wxml-->
 <view class="container">
-    <view class="header">
+    <view class="header" style="filter:{{containerBlur}}">
         <text class="header--musicSource header--musicSource__active">网易云音乐</text>
         <text class="header--musicSource">QQ 音乐</text>
     </view>
-    <view class="listCard">
-        <view wx:for="{{NEMusic}}" class="listCard--single">
-            <!-- <text>
-                {{index+1}}
-            </text> -->
+    <view class="listCard" style="filter:{{containerBlur}}">
+        <!-- 正在搜索情况下显示缓冲画面 -->
+        <view hidden="{{!isSearching}}">
+            <text>
+                搜索中...
+            </text>
+        </view>
+        <!-- 未搜索情况下显示排行榜 -->
+        <view hidden="{{NEMusic_SearchResult||isSearching}}" wx:for="{{NEMusic_NewSongChart}}" class="listCard--single">
             <view class="listCard--single--song" selectable="true">
                 {{item.name}}
             </view>
@@ -22,7 +26,22 @@
                 </view>
             </view>
         </view>
+        <!-- 搜索情况下显示搜索结果 -->
+        <view hidden="{{!NEMusic_SearchResult||isSearching}}" wx:for="{{NEMusic_SearchResult}}" class="listCard--single">
+            <view class="listCard--single--song" selectable="true">
+                {{item.name}}
+            </view>
+            <view class="listCard--single--subInfo">
+                <view wx:for="{{item.artists}}" class="listCard--single--artist--single">
+                    {{item.name}}
+                </view>
+                -
+                <view class="listCard--single--album">
+                    {{item.album.name}}
+                </view>
+            </view>
+        </view>
     </view>
-    <input class="searchBox" type="text" placeholder="搜点儿你想听的..." cursor-spacing="20" placeholder-class="input-placeholder" maxlength="20" confirm-type="search" 
-    value="{{searchBarValue}}"></input>
+    <input class="searchBox" style="bottom:{{searchBarBottom}}" type="text" value="{{searchBarValue}}" placeholder="同时搜索「网易云音乐」与「QQ 音乐」" cursor-spacing="20" placeholder-class="input-placeholder" maxlength="20" confirm-type="search" 
+    adjust-position="{{false}}" focus="{{isFocus}}" bindconfirm="startSearchingContent" bindtouchstart="switchToSearchStatus" bindblur="switchToNormalStatus" bindinput="syncValueToGlobalData"></input>
 </view>

@@ -1,7 +1,7 @@
 {
   "pages":[
-    "pages/browser/browser",
-    "pages/index/index"
+    "pages/index/index",
+    "pages/browser/browser"
   ],
   "window":{
     "backgroundTextStyle":"dark",

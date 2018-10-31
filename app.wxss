@@ -1,14 +1,9 @@
 /**app.wxss**/
 .container {
-  height: 100%;
   padding: 20rpx;
   box-sizing: border-box;
   background-color: #ECEFF2;
 } 
-
-.fullScreen {
-    height: 100vh;
-}
 
 .searchBox {
     width: 70%;
@@ -21,6 +16,7 @@
     border-radius: 100rpx;
     background-color: white;
     box-shadow: 0rpx 30rpx 40rpx -20rpx rgba(95, 95, 95, 0.3);
+    transition: bottom .2s cubic-bezier(0.28, 0.11, 0.32, 1);
 }
 .input-placeholder {
     font-size: 30rpx;
