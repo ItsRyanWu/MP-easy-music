@@ -14,7 +14,7 @@ export const formatNumber = n => {
   return n[1] ? n : '0' + n
 }
 
-export const startSearchingContent = (searchKeyWord) => {
+export const startSearchingContent = (searchKeyWord, currentPage) => {
     if (/^\s*$/.test(searchKeyWord)) return;
     var reqTask = wx.request({
         url: `https://zeyun.org:3443/search?keywords=${searchKeyWord}`,
@@ -39,14 +39,8 @@ export const startSearchingContent = (searchKeyWord) => {
                 //     console.error(`数据储存失败：搜索关键词 ${searchKeyWord} ${err.errMsg}`)
                 // },
                 // complete: ()=>{
-                    let currentPages = getCurrentPages();
-                    if (currentPages[currentPages.length-1].route === 'pages/search-result/search-result'){
-                        let searchResultPage = currentPages[currentPages.length-1];
-                        // let searchResultInStorage = wx.getStorageSync('NEMusic_SearchResult'); 
-                        searchResultPage.setData({isSearching: false, NEMusic_SearchResult: searchResult})
-                    } else {
-                        console.log('currentPages 不是 search-result')
-                    }
+            // let searchResultInStorage = wx.getStorageSync('NEMusic_SearchResult'); 
+            currentPage.setData({isSearching: false, NEMusic_SearchResult: searchResult})
                 // }
             // });
         },

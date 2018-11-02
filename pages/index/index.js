@@ -40,24 +40,11 @@ Page({
         // 监听输入事件同步 searchBar 值至全局变量
         app.globalData.searchBarValue = event.detail.value;
     },
-    navigateToSearchResult(){
-        wx.navigateTo({
-            url: `../search-result/search-result`,
-            success(){
-                let currentPages = getCurrentPages();
-                if (currentPages[currentPages.length-1].route === 'pages/search-result/search-result'){
-                    let searchResult = currentPages[currentPages.length-1];
-                    searchResult.setData({isSearching: true})
-                } else {
-                    console.log('currentPages 不是 search-result')
-                }
-            }
-        });
-    },
     startSearchingAndNavigatingToSearchResult(){
         let searchKeyWord = app.globalData.searchBarValue;
         if (!searchKeyWord || /^\s*$/.test(searchKeyWord)) return;
-        this.navigateToSearchResult();
-        app.startSearchingContent(searchKeyWord);
+        wx.navigateTo({
+            url: `../search-result/search-result?search=${searchKeyWord}`
+        });
     }
 })

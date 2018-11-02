@@ -9,9 +9,15 @@ Page({
         isFocus: false,
         isSearching: false
     },
-    onShow(){
+    onLoad(redirectParameters){
         // 显示该页时同步 globalData 的 searchBar 值
         this.setData({searchBarValue: app.globalData.searchBarValue});
+        if('search' in redirectParameters){
+            console.log('result-page: 接收到搜索命令，开始搜索。')
+            this.startSearchingContent();
+        }
+    },
+    onShow(){
         // // 首先试图读取储存中是否存在搜索结果
         // try {
         // console.log(`试图获取存储中的搜索数据`);
@@ -30,7 +36,6 @@ Page({
     onUnload(){
         // 离开搜索页时清空 serchBar 值 
         app.globalData.searchBarValue = null;
-        this.setData({searchBarValue: null});
     },
     switchToSearchStatus(){
         // 激活 serchBar 时向上移动方便打字
@@ -60,6 +65,6 @@ Page({
         let searchKeyWord = app.globalData.searchBarValue;
         if (!searchKeyWord || /^\s*$/.test(searchKeyWord)) return;
         this.setData({isSearching: true});
-        app.startSearchingContent(searchKeyWord);
+        app.startSearchingContent(searchKeyWord, this);
     }
 })

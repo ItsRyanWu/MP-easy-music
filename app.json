@@ -6,14 +6,14 @@
   ],
   "window":{
     "backgroundTextStyle":"dark",
-    "navigationBarBackgroundColor": "#C7EBE6",
+    "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "Mint Music",
     "navigationBarTextStyle":"black"
   },
   "tabBar":{
     "color": "#749595",
     "selectedColor": "#000000",
-    "backgroundColor": "#C7EBE6",
+    "backgroundColor": "#fff",
     "position": "top",
     "list": [
       {

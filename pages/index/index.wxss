@@ -39,6 +39,7 @@ page {
     display: block;
     text-align: center;
     line-height: 120rpx;
+    color: #222222;
 }
 .musicInfo--singer, .musicInfo--album {
     font-size: 30rpx;
