@@ -2,12 +2,14 @@
 <view class="container">
     <view class="flexContainer" style="filter:{{containerBlur}}">
         <view class="albumImage">
-            <image class="albumImage--image" src="{{albumImageSrc}}" mode="aspectFill"></image>
+            <image class="albumImage--image" src="{{nowPlaying.albumImageUrl}}" mode="aspectFill"></image>
         </view>
         <view class="musicInfo">
-            <text class="musicInfo--song" >{{song}}</text>
-            <text class="musicInfo--singer" >{{singer}}</text>
-            <text class="musicInfo--album" >{{album}}</text>
+            <text class="musicInfo--song" >{{nowPlaying.songName}}</text>
+            <view class="musicInfo--sub">
+                <text class="musicInfo--sub--singer" >{{nowPlaying.artistsName}} - </text>
+                <text class="musicInfo--sub--album" >{{nowPlaying.albumName}}</text>
+            </view>
         </view>
         <view class="controlButton">
             <view class="controlButton--container">
@@ -18,5 +20,5 @@
         </view>
     </view>
     <input class="searchBox" style="bottom:{{searchBarBottom}}" type="text" value="{{searchBarValue}}" placeholder="同时搜索「网易云音乐」与「QQ 音乐」" cursor-spacing="20" placeholder-class="input-placeholder" maxlength="20" confirm-type="search" 
-    adjust-position="{{false}}" focus="{{isFocus}}"  bindconfirm="startSearchingAndNavigatingToSearchResult" bindtap="switchToSearchStatus" bindblur="switchToNormalStatus" bindinput="syncValueToGlobalData"></input>
+    adjust-position="{{false}}" focus="{{isFocus}}"  bindconfirm="getSearchKeyWordAndNavigatingToSearchResult" bindtap="switchToSearchStatus" bindblur="switchToNormalStatus" bindinput="syncValueToGlobalData"></input>
 </view>

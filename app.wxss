@@ -16,7 +16,6 @@
     border-radius: 100rpx;
     background-color: white;
     box-shadow: 0rpx 30rpx 40rpx -20rpx rgba(95, 95, 95, 0.3);
-    /* transition: bottom .2s linear; */
 }
 .input-placeholder {
     font-size: 30rpx;
@@ -75,7 +74,7 @@
     width: 70%;
     background: linear-gradient(135deg, #f3f5f7 35%, #fff 50%, #f3f5f7 75%);
     background-size: 300% 100%;
-    animation: loadingBackground .8s ease-in-out infinite alternate;
+    animation: loadingBackground .8s ease-in-out infinite;
 }
 .listCard--single--subInfo__loading {
     margin-top: 20rpx;
@@ -83,7 +82,7 @@
     width: 35%;
     background: linear-gradient(135deg, #f3f5f7 35%, #fff 50%, #f3f5f7 75%);
     background-size: 300% 100%;
-    animation: loadingBackground .8s ease-in-out infinite alternate;
+    animation: loadingBackground .8s ease-in-out infinite;
 }
 .listCard {
     min-height: 100vh;
@@ -127,10 +126,10 @@
 
 @keyframes loadingBackground {
     0% {
-        background-position-x: 0%;
+        background-position-x: 100%;
     }
     100% {
-        background-position-x: 100%;
+        background-position-x: 0%;
     }
 }
 

@@ -14,7 +14,7 @@
             <view class="listCard--single--song__loading"></view>
             <view class="listCard--single--subInfo__loading"></view>
         </view>
-        <view wx:for="{{NEMusic_NewSongChart}}" class="listCard--single">
+        <view wx:for="{{NEMusic_NewSongChart}}" class="listCard--single" bindtap="playThisSong" data-songName="{{item.name}}" data-songId="{{item.id}}" data-albumName="{{item.al.name}}" data-albumId="{{item.al.id}}" data-artists="{{item.ar}}">
             <view class="listCard--single--song" selectable="true">
                 {{item.name}}
             </view>
@@ -30,5 +30,5 @@
         </view>
     </view>
     <input class="searchBox" style="bottom:{{searchBarBottom}}" type="text" value="{{searchBarValue}}" placeholder="同时搜索「网易云音乐」与「QQ 音乐」" cursor-spacing="20" placeholder-class="input-placeholder" maxlength="20" confirm-type="search" 
-    adjust-position="{{false}}" focus="{{isFocus}}" bindconfirm="startSearchingAndNavigatingToSearchResult" bindtap="switchToSearchStatus" bindblur="switchToNormalStatus" bindinput="syncValueToGlobalData"></input>
+    adjust-position="{{false}}" focus="{{isFocus}}" bindconfirm="getSearchKeyWordAndNavigatingToSearchResult" bindtap="switchToSearchStatus" bindblur="switchToNormalStatus" bindinput="syncValueToGlobalData"></input>
 </view>

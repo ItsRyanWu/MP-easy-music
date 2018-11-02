@@ -41,10 +41,9 @@ page {
     line-height: 120rpx;
     color: #222222;
 }
-.musicInfo--singer, .musicInfo--album {
+.musicInfo--sub {
     font-size: 30rpx;
     color: #8E8E93;
-    display: block;
     text-align: center;
     line-height: 60rpx;
 }
