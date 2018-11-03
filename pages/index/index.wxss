@@ -6,13 +6,19 @@ page {
     height: 100%;
 }
 .flexContainer {
+    position: absolute;
+    top: 120rpx;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: auto;
+    height: auto;
     display: flex;
-    grid-template-rows: 60% 13% 3% 15%;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    height: 85%;
-    transition: filter .2s linear .1s;
+    height: calc(100% - 120rpx);
+    transition: filter .2s linear;
 }
 .albumImage {
     position: relative;
@@ -31,7 +37,7 @@ page {
 }
 .musicInfo {
     position: relative;
-    flex-basis: 25%;
+    flex-basis: 15%;
 }
 .musicInfo--song {
     font-size: 50rpx;
@@ -49,11 +55,10 @@ page {
 }
 .controlButton {
     position: relative;
-    flex-basis: 15%;
+    flex-basis: 25%;
 }
 .controlButton--container {
     position: absolute;
-    /* width: 100vw; */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);

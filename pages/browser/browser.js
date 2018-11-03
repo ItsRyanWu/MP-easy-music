@@ -3,10 +3,8 @@ const app = getApp()
 Page({
     data: {
         NEMusic_NewSongChart: null,
-        searchBarBottom: null,
         containerBlur: null,
         searchBarValue: null,
-        isFocus: false
     },
     onShow(){
         // 显示该页时同步 globalData 的 searchBar 值

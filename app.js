@@ -39,16 +39,10 @@ App({
         this.globalData.BackgroundAudioManager = wx.getBackgroundAudioManager();
     },
     switchToSearchStatus(currentPage){
-        // 激活 serchBar 时向上移动方便打字
-        currentPage.setData({searchBarBottom: '80%'})
         // 激活 serchBar 时 blur 主页面
-        currentPage.setData({containerBlur: 'blur(13rpx)'});
-        currentPage.setData({isFocus: true})
+        currentPage.setData({containerBlur: 'blur(40rpx) saturate(150%)'});
     },
     switchToNormalStatus(currentPage){
-        currentPage.setData({isFocus: false})
-        // 取消激活 serchBar 恢复原来位置
-        currentPage.setData({searchBarBottom: null})
         // 取消激活 serchBar 时取消 blur 主页面
         currentPage.setData({containerBlur: null});
         // 如果搜索栏为空则清空所有搜索数据，初始化为未搜索状态
@@ -107,7 +101,7 @@ App({
     },
     playThisSong(event){
         // 获取背景音频上下文
-        let BackgroundAudioManager = wx.getBackgroundAudioManager();
+        let BackgroundAudioManager = this.globalData.BackgroundAudioManager;
         // 解析关键参数
         let songTextData = event.currentTarget.dataset;
         let songId = songTextData.songid;
@@ -119,7 +113,7 @@ App({
         // 为背景音频上下文设置属性
         BackgroundAudioManager.title = songName;
         BackgroundAudioManager.singer = artistsName;
-        BackgroundAudioManager.epname = albumName;
+        BackgroundAudioManager.epname = ` - ${albumName}`; // hack 解决下拉菜单歌手名与专辑名没有空隙的问题
         // 为全局音乐变量设置属性
         this.globalData.nowPlaying.songName = songName;
         this.globalData.nowPlaying.artistsName = artistsName;

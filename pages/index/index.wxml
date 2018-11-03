@@ -1,5 +1,9 @@
 <!--index.wxml-->
 <view class="container">
+    <view class="searchBoxContainer">
+        <input class="searchBox" type="text" value="{{searchBarValue}}" placeholder="同时搜索「网易云音乐」与「QQ 音乐」" cursor-spacing="20" placeholder-class="input-placeholder" maxlength="20" confirm-type="search" 
+        adjust-position="{{false}}" bindconfirm="getSearchKeyWordAndNavigatingToSearchResult" bindtap="switchToSearchStatus" bindblur="switchToNormalStatus" bindinput="syncValueToGlobalData"></input>
+    </view>
     <view class="flexContainer" style="filter:{{containerBlur}}">
         <view class="albumImage">
             <image class="albumImage--image" src="{{nowPlaying.albumImageUrl}}" mode="aspectFill"></image>
@@ -22,6 +26,4 @@
             </view>
         </view>
     </view>
-    <input class="searchBox" style="bottom:{{searchBarBottom}}" type="text" value="{{searchBarValue}}" placeholder="同时搜索「网易云音乐」与「QQ 音乐」" cursor-spacing="20" placeholder-class="input-placeholder" maxlength="20" confirm-type="search" 
-    adjust-position="{{false}}" focus="{{isFocus}}"  bindconfirm="getSearchKeyWordAndNavigatingToSearchResult" bindtap="switchToSearchStatus" bindblur="switchToNormalStatus" bindinput="syncValueToGlobalData"></input>
 </view>

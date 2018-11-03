@@ -10,10 +10,8 @@ Page({
             albumImageUrl: null
         },
         playButtonStatus: 'to-play',
-        searchBarBottom: null,
         containerBlur: null,
-        searchBarValue: null,
-        isFocus: false
+        searchBarValue: null
     },
     onLoad(){
         app.globalData.BackgroundAudioManager.onPlay(()=>{

@@ -3,10 +3,8 @@ const app = getApp()
 Page({
     data: {
         NEMusic_SearchResult: null,
-        searchBarBottom: null,
         containerBlur: null,
         searchBarValue: null,
-        isFocus: false,
         isSearching: false
     },
     onLoad(redirectParameters){

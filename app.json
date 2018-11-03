@@ -7,14 +7,14 @@
   "window":{
     "backgroundTextStyle":"dark",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "简单听歌",
+    "navigationBarTitleText": "简单搜歌",
     "navigationBarTextStyle":"black"
   },
   "tabBar":{
-    "color": "#749595",
-    "selectedColor": "#000000",
+    "color": "#8E8E93",
+    "selectedColor": "#222222",
     "backgroundColor": "#fff",
-    "position": "top",
+    "borderStyle": "white",
     "list": [
       {
         "text": "正在播放",
@@ -22,6 +22,10 @@
       },
       {
         "text": "音乐库",
+        "pagePath": "pages/browser/browser"
+      },
+      {
+        "text": "我的",
         "pagePath": "pages/browser/browser"
       }
     ]
