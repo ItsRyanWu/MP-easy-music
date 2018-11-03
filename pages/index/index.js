@@ -9,10 +9,19 @@ Page({
             albumName: null,
             albumImageUrl: null
         },
+        playButtonStatus: 'to-play',
         searchBarBottom: null,
         containerBlur: null,
         searchBarValue: null,
         isFocus: false
+    },
+    onLoad(){
+        app.globalData.BackgroundAudioManager.onPlay(()=>{
+            this.setData({playButtonStatus: 'to-pause'});
+        })
+        app.globalData.BackgroundAudioManager.onPause(()=>{
+            this.setData({playButtonStatus: 'to-play'});
+        })
     },
     onShow(){
         // 显示该页时同步 globalData 的 searchBar 值
@@ -37,5 +46,12 @@ Page({
     },
     syncGlobalNowPlaying(){
         this.setData({nowPlaying: app.globalData.nowPlaying})
+    },
+    switchPlayPause(){
+        if (app.globalData.BackgroundAudioManager.paused){
+            app.globalData.BackgroundAudioManager.play();
+        } else {
+            app.globalData.BackgroundAudioManager.pause();
+        }
     }
 })

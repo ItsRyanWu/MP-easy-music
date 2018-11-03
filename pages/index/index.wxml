@@ -13,9 +13,12 @@
         </view>
         <view class="controlButton">
             <view class="controlButton--container">
-                <image class="controlButton--container--backward" src="/img/backward-solid.svg" mode="aspectFit"></image>
-                <image class="controlButton--container--play" src="/img/play-solid.svg" mode="aspectFit"></image>
-                <image class="controlButton--container--forward" src="/img/forward-solid.svg" mode="aspectFit"></image>
+                <!-- <view class="controlButton--container--backward" hover-class="none" hover-stop-propagation="false">pre</view> -->
+                <view class="controlButton--container--middle" bindtap="switchPlayPause">
+                        <view class="controlButton--container--middle-pause-left" style="animation-name:{{playButtonStatus+'-1'}}"></view>
+                        <view class="controlButton--container--middle-pause-right" style="animation-name:{{playButtonStatus+'-2'}}"></view>
+                </view>
+                <!-- <view class="controlButton--container--forward" hover-class="none" hover-stop-propagation="false">next</view> -->
             </view>
         </view>
     </view>

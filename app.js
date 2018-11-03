@@ -8,7 +8,8 @@ App({
             albumName: '耳朵',
             albumImageUrl: 'http://p2.music.126.net/tt8xwK-ASC2iqXNUXYKoDQ==/109951163606377163.jpg'
         },
-        searchBarValue: null
+        searchBarValue: null,
+        BackgroundAudioManager: null
     },
     onLaunch(){
         wx.request({
@@ -35,6 +36,7 @@ App({
                 console.error(`数据请求失败：网易云音乐新歌榜 ${err.errMsg}`)
             }
         });
+        this.globalData.BackgroundAudioManager = wx.getBackgroundAudioManager();
     },
     switchToSearchStatus(currentPage){
         // 激活 serchBar 时向上移动方便打字

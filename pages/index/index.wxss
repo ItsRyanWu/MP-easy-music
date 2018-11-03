@@ -53,18 +53,93 @@ page {
 }
 .controlButton--container {
     position: absolute;
-    width: 100vw;
+    /* width: 100vw; */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    text-align:center;
 }
 .controlButton--container--forward, .controlButton--container--backward {
     width: 70rpx;
     height: 70rpx;
 }
-.controlButton--container--play {
+.controlButton--container--middle {
+    display: flex;
+    /* flex-direction: row; */
+    /* justify-content: space-around; */
+    align-items: center;
     width: 80rpx;
     height: 80rpx;
-    margin: 0 100rpx;
+    /* margin: 0 100rpx; */
+}
+.controlButton--container--middle-pause-left,
+.controlButton--container--middle-pause-right {
+    width: 20rpx;
+    height: 70rpx;
+    position: absolute;
+    left: 0;
+    background: linear-gradient(to top, #5c5c5c, #222222 70%);
+    border-radius: 8rpx;
+    animation-fill-mode: forwards;
+    animation-duration: .2s;
+    animation-timing-function: linear;
+}
+.controlButton--container--middle-pause-left {
+    transform: translateX(10rpx);
+    will-change: transform;
+    /* animation: pause-left 1s linear infinite; */
+}
+.controlButton--container--middle-pause-right{
+    transform: translateX(50rpx);
+    will-change: transform;
+    /* animation: pause-right 1s linear infinite; */
+}
+@keyframes to-play-1 {
+    0%{
+        transform: translateX(10rpx);
+    }
+    40% {
+        transform: translateX(30rpx) rotate(90deg);
+        opacity: .4;
+    }
+    100%{
+        transform: translateX(30rpx) translateY(-14rpx) rotate(125deg);
+    }
+}
+@keyframes to-pause-1 {
+    0%{
+        transform: translateX(30rpx) translateY(-14rpx) rotate(125deg);
+    }
+    40%{
+        transform: translateX(20rpx) translateY(0) rotate(180deg);
+        opacity: .4;
+    }
+    100%{
+        transform: translateX(10rpx) translateY(0) rotate(180deg);
+    }
+}
+@keyframes to-play-2 {
+    0%{
+        transform: translateX(50rpx);
+    }
+    40%{
+        transform: translateX(30rpx) rotate(-90deg);
+        opacity: .4;
+    }
+    100%{
+        background-color: #5c5c5c;
+        transform: translateX(30rpx) translateY(14rpx) rotate(-125deg);
+    }
+}
+@keyframes to-pause-2 {
+    0%{
+        background-color: #5c5c5c;
+        transform: translateX(30rpx) translateY(14rpx) rotate(-125deg);
+    }
+    40%{
+        transform: translateX(20rpx) translateY(0) rotate(-180deg);
+        opacity: .4;
+    }
+    100%{
+        transform: translateX(50rpx) translateY(0) rotate(-180deg);
+    }
 }

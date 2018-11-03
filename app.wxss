@@ -72,7 +72,7 @@
     margin-top: 20rpx;
     height: 50rpx;
     width: 70%;
-    background: linear-gradient(135deg, #f3f5f7 35%, #fff 50%, #f3f5f7 75%);
+    background: linear-gradient(110deg, #f3f5f7 40%, #fff 50%, #f3f5f7 70%);
     background-size: 300% 100%;
     animation: loadingBackground .8s ease-in-out infinite;
 }
@@ -80,7 +80,7 @@
     margin-top: 20rpx;
     height: 30rpx;
     width: 35%;
-    background: linear-gradient(135deg, #f3f5f7 35%, #fff 50%, #f3f5f7 75%);
+    background: linear-gradient(110deg, #f3f5f7 40%, #fff 50%, #f3f5f7 70%);
     background-size: 300% 100%;
     animation: loadingBackground .8s ease-in-out infinite;
 }
@@ -126,7 +126,7 @@
 
 @keyframes loadingBackground {
     0% {
-        background-position-x: 100%;
+        background-position-x: 120%;
     }
     100% {
         background-position-x: 0%;

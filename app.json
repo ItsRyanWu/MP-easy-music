@@ -7,7 +7,7 @@
   "window":{
     "backgroundTextStyle":"dark",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "Mint Music",
+    "navigationBarTitleText": "简单听歌",
     "navigationBarTextStyle":"black"
   },
   "tabBar":{
