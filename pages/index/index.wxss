@@ -86,15 +86,15 @@ page {
     border-radius: 8rpx;
     animation-fill-mode: forwards;
     animation-duration: .2s;
-    animation-timing-function: linear;
+    animation-timing-function: ease-in-out;
 }
 .controlButton--container--middle-pause-left {
-    transform: translateX(10rpx);
+    /* transform: translateX(10rpx); */
     will-change: transform;
     /* animation: pause-left 1s linear infinite; */
 }
 .controlButton--container--middle-pause-right{
-    transform: translateX(50rpx);
+    /* transform: translateX(50rpx); */
     will-change: transform;
     /* animation: pause-right 1s linear infinite; */
 }
@@ -102,21 +102,17 @@ page {
     0%{
         transform: translateX(10rpx);
     }
-    40% {
-        transform: translateX(30rpx) rotate(90deg);
-        opacity: .4;
-    }
     100%{
         transform: translateX(30rpx) translateY(-14rpx) rotate(125deg);
+        border-radius: 30rpx;
+        border-radius: 30rpx;
     }
 }
 @keyframes to-pause-1 {
     0%{
         transform: translateX(30rpx) translateY(-14rpx) rotate(125deg);
-    }
-    40%{
-        transform: translateX(20rpx) translateY(0) rotate(180deg);
-        opacity: .4;
+        border-radius: 30rpx;
+        border-radius: 30rpx;
     }
     100%{
         transform: translateX(10rpx) translateY(0) rotate(180deg);
@@ -126,23 +122,17 @@ page {
     0%{
         transform: translateX(50rpx);
     }
-    40%{
-        transform: translateX(30rpx) rotate(-90deg);
-        opacity: .4;
-    }
     100%{
-        background-color: #5c5c5c;
         transform: translateX(30rpx) translateY(14rpx) rotate(-125deg);
+        border-radius: 30rpx;
+        border-radius: 30rpx;
     }
 }
 @keyframes to-pause-2 {
     0%{
-        background-color: #5c5c5c;
         transform: translateX(30rpx) translateY(14rpx) rotate(-125deg);
-    }
-    40%{
-        transform: translateX(20rpx) translateY(0) rotate(-180deg);
-        opacity: .4;
+        border-radius: 30rpx;
+        border-radius: 30rpx;
     }
     100%{
         transform: translateX(50rpx) translateY(0) rotate(-180deg);

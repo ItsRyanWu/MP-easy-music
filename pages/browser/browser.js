@@ -34,6 +34,7 @@ Page({
         });
     },
     playThisSong(event){
-        app.playThisSong(event)
+        let songTextData = event.currentTarget.dataset;
+        app.playThisSong(songTextData);
     }
 })

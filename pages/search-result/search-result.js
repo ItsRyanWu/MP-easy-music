@@ -50,7 +50,14 @@ Page({
         this.setData({isSearching: true});
         app.startSearchingContent(searchKeyWord, this);
     },
+    longpressToShowJSON(event){
+        if (app.globalData.debug) {
+            let songTextData = event.currentTarget.dataset;
+            console.log(JSON.stringify(songTextData));
+        }
+    },
     playThisSong(event){
-        app.playThisSong(event)
+        let songObjData = event.currentTarget.dataset;
+        app.playThisSong(songObjData);
     }
 })

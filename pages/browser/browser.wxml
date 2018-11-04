@@ -18,9 +18,12 @@
             <view class="listCard--single--song__loading"></view>
             <view class="listCard--single--subInfo__loading"></view>
         </view>
-        <view wx:for="{{NEMusic_NewSongChart}}" class="listCard--single" bindtap="playThisSong" data-songName="{{item.name}}" data-songId="{{item.id}}" data-albumName="{{item.al.name}}" data-albumId="{{item.al.id}}" data-artists="{{item.ar}}">
+        <view wx:for="{{NEMusic_NewSongChart}}" class="listCard--single" bindtap="playThisSong" data-songName="{{item.name}}" data-songId="{{item.id}}" data-albumName="{{item.al.name}}" data-albumId="{{item.al.id}}" data-artists="{{item.ar}}" data-songAlias="{{item.alias}}">
             <view class="listCard--single--song" selectable="true">
                 {{item.name}}
+                <view wx:for="{{item.alias}}" class="listCard--single--song--alias" >
+                    ({{item}})
+                </view>
             </view>
             <view class="listCard--single--subInfo">
                 <view wx:for="{{item.ar}}" class="listCard--single--artist--single">

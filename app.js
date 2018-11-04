@@ -1,17 +1,20 @@
-var utils = require('/utils/util');
 //app.js
 App({
     globalData: {
         nowPlaying:{
-            songName: '年少有为',
-            artistsName: '李荣浩',
-            albumName: '耳朵',
-            albumImageUrl: 'http://p2.music.126.net/tt8xwK-ASC2iqXNUXYKoDQ==/109951163606377163.jpg'
+            songObjData: null,
+            songName: null,
+            songAlias: null,
+            artistsName: null,
+            albumName: null,
+            albumImageUrl: null
         },
         searchBarValue: null,
-        BackgroundAudioManager: null
+        BackgroundAudioManager: null,
+        debug: true
     },
     onLaunch(){
+        // 请求排行榜数据
         wx.request({
             url: 'https://zeyun.org:3443/top/list?idx=0',
             header: {'content-type':'application/json'},
@@ -48,7 +51,6 @@ App({
         // 如果搜索栏为空则清空所有搜索数据，初始化为未搜索状态
         if (!this.globalData.searchBarValue || /^\s*$/.test(this.globalData.searchBarValue)) {
             console.log('搜索栏已空，清除所有搜索数据');
-            // wx.removeStorageSync('NEMusic_SearchResult');
             currentPage.setData({searchBarValue: null})
         }
     },
@@ -99,25 +101,56 @@ App({
             });
         })
     },
-    playThisSong(event){
+    setSongInfoToGlobalData(songObjData, albumImageUrl){
+        let songId = songObjData.songid;
+        let songName = songObjData.songname;
+        if (songObjData.songalias){
+            let songAlias = songObjData.songalias.map((item)=>{
+                return item.name
+            }).join(' / ');
+            this.globalData.nowPlaying.songAlias = songAlias;
+        }
+        let albumName = songObjData.albumname;
+        let artistsName = songObjData.artists.map((item)=>{
+            return item.name
+        }).join(' / ');
+        // 为自己创建的全局音乐变量设置属性
+        this.globalData.nowPlaying.songObjData = songObjData;
+        this.globalData.nowPlaying.songName = songName;
+        this.globalData.nowPlaying.artistsName = artistsName;
+        this.globalData.nowPlaying.albumName = albumName;
+        // 是否解析过专辑封面图像
+        if (albumImageUrl) {
+            this.globalData.nowPlaying.albumImageUrl = albumImageUrl;
+        } else {
+            return new Promise((resolve, reject)=>{
+                this.getAlbumImageUrl(songId).then((result)=>{
+                    let albumImageUrl = result;
+                    this.globalData.nowPlaying.albumImageUrl = albumImageUrl;
+                    resolve(albumImageUrl);
+                });
+            })
+        }
+    },
+    /**
+     * 
+     * @param {Object} songObjData
+     * 包含四个属性：songid(string), songname(string), albumname(string), artists(array)
+     */
+    playThisSong(songObjData){
         // 获取背景音频上下文
         let BackgroundAudioManager = this.globalData.BackgroundAudioManager;
         // 解析关键参数
-        let songTextData = event.currentTarget.dataset;
-        let songId = songTextData.songid;
-        let songName = songTextData.songname;
-        let albumName = songTextData.albumname;
-        let artistsName = songTextData.artists.map((item)=>{
+        let songId = songObjData.songid;
+        let songName = songObjData.songname;
+        let albumName = songObjData.albumname;
+        let artistsName = songObjData.artists.map((item)=>{
             return item.name
         }).join(' / ')
         // 为背景音频上下文设置属性
         BackgroundAudioManager.title = songName;
         BackgroundAudioManager.singer = artistsName;
         BackgroundAudioManager.epname = ` - ${albumName}`; // hack 解决下拉菜单歌手名与专辑名没有空隙的问题
-        // 为全局音乐变量设置属性
-        this.globalData.nowPlaying.songName = songName;
-        this.globalData.nowPlaying.artistsName = artistsName;
-        this.globalData.nowPlaying.albumName = albumName;
         // 请求获取歌曲链接以及图片链接
         Promise.all([this.getSongSourceUrl(songId), this.getAlbumImageUrl(songId)])
         .then((result)=>{
@@ -128,7 +161,7 @@ App({
             BackgroundAudioManager.src = songSourceUrl;
             BackgroundAudioManager.coverImgUrl = albumImageUrl;
             // 为全局音乐变量设置属性
-            this.globalData.nowPlaying.albumImageUrl = albumImageUrl;
+            this.setSongInfoToGlobalData(songObjData, albumImageUrl);
             // 开始播放
             BackgroundAudioManager.play();
         })
@@ -145,29 +178,53 @@ App({
             success: (result)=>{
                 console.log(`数据请求完成：搜索关键词 ${searchKeyWord}`);
                 let searchResult = result.data.result.songs;
-                // 将数据存入缓存
-                // wx.setStorage({
-                //     key: 'NEMusic_SearchResult',
-                //     data: searchResult,
-                //     success: ()=>{
-                //         console.log(`数据储存完成：搜索关键词 ${searchKeyWord} `)
-                        // console.log(wx.getStorageInfoSync());
-                        // console.log(wx.getStorageSync('NEMusic_SearchResult')) 
-                    // },
-                    // fail: (err)=>{
-                    //     console.error(`数据储存失败：搜索关键词 ${searchKeyWord} ${err.errMsg}`)
-                    // },
-                    // complete: ()=>{
-                // let searchResultInStorage = wx.getStorageSync('NEMusic_SearchResult'); 
-                currentPage.setData({isSearching: false, NEMusic_SearchResult: searchResult})
-                    // }
-                // });
+                currentPage.setData({isSearching: false, NEMusic_SearchResult: searchResult});
             },
             fail: (err)=>{
-                console.error(`数据请求失败：搜索关键词 ${searchKeyWord} ${err.errMsg}`)
+                console.error(`数据请求失败：搜索关键词 ${searchKeyWord} ${err.errMsg}`);
             },
             complete: ()=>{}
         });
+    },
+    rollASongInEditorChoiceAndSync(currentPage){
+        let editor_choice = wx.getStorageSync('editor-choice');
+        let rollASongIndex = Math.round(Math.random()*(editor_choice.length-1));
+        let songObjData = editor_choice[rollASongIndex];
+        this.setSongInfoToGlobalData(songObjData).then(()=>{
+            currentPage.syncGlobalNowPlaying();
+        });
+        currentPage.syncGlobalNowPlaying();
+    },
+    requestForANewEditorChoiceAndSave(){
+        return new Promise((resolve, reject)=>{
+            // 请求编辑推荐歌单数据
+            wx.request({
+                url: 'https://zeyun.org/easy-music/editor-choice.json',
+                header: {'content-type':'application/json'},
+                method: 'GET',
+                dataType: 'json',
+                responseType: 'text',
+                success: (result)=>{
+                    console.log('数据请求完成：编辑推荐歌单')
+                    wx.setStorage({
+                        key: 'editor-choice',
+                        data: result.data,
+                        success: ()=>{
+                            console.log('数据储存完成：编辑推荐歌单');
+                            resolve('done');
+                        },
+                        fail: (err)=>{
+                            console.error(`数据储存失败：编辑推荐歌单 ${err.errMsg}`)
+                        },
+                        complete: ()=>{}
+                    });
+                },
+                fail: (err)=>{
+                    console.error(`数据请求失败：编辑推荐歌单 ${err.errMsg}`)
+                },
+                complete: ()=>{}
+            });
+        })
     }
 //   onLaunch: function () {
     // 展示本地存储能力

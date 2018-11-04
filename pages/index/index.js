@@ -6,6 +6,7 @@ Page({
         nowPlaying:{
             songName: null,
             artistsName: null,
+            songAlias: null,
             albumName: null,
             albumImageUrl: null
         },
@@ -14,10 +15,25 @@ Page({
         searchBarValue: null
     },
     onLoad(){
+        if (wx.getStorageInfoSync().keys.includes('editor-choice')){
+            app.rollASongInEditorChoiceAndSync(this);
+            app.requestForANewEditorChoiceAndSave().then((result)=>{
+                console.log('最新编辑推荐歌单已更新并缓存')
+            })
+        } else {
+            app.requestForANewEditorChoiceAndSave().then((result)=>{
+                console.log('初始化下载编辑推荐歌单成功并缓存')
+                app.rollASongInEditorChoiceAndSync(this);
+            })
+        }
+        // 监听事件背景音乐上下文
         app.globalData.BackgroundAudioManager.onPlay(()=>{
             this.setData({playButtonStatus: 'to-pause'});
         })
         app.globalData.BackgroundAudioManager.onPause(()=>{
+            this.setData({playButtonStatus: 'to-play'});
+        })
+        app.globalData.BackgroundAudioManager.onStop(()=>{
             this.setData({playButtonStatus: 'to-play'});
         })
     },
@@ -46,8 +62,9 @@ Page({
         this.setData({nowPlaying: app.globalData.nowPlaying})
     },
     switchPlayPause(){
-        if (app.globalData.BackgroundAudioManager.paused){
-            app.globalData.BackgroundAudioManager.play();
+        if (app.globalData.BackgroundAudioManager.paused || app.globalData.BackgroundAudioManager.paused == undefined){
+            app.playThisSong(app.globalData.nowPlaying.songObjData);
+            this.syncGlobalNowPlaying();
         } else {
             app.globalData.BackgroundAudioManager.pause();
         }
