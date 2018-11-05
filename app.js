@@ -43,6 +43,30 @@ App({
                 console.error(`数据请求失败：网易云音乐新歌榜 ${err.errMsg}`)
             }
         });
+        wx.request({
+            url: 'https://zeyun.org:3444/api/suggest/album/qq?limit=30',
+            header: {'content-type':'application/json'},
+            method: 'GET',
+            dataType: 'json',
+            responseType: 'text',
+            success: (result)=>{
+                console.log('数据请求完成：QQ 音乐建议专辑榜')
+                wx.setStorage({
+                    key: 'QQMusic_SuggestAlbumChart',
+                    data: result.data.albumList,
+                    success: ()=>{
+                        console.log('数据储存完成：QQ 音乐建议专辑榜')
+                    },
+                    fail: (err)=>{
+                        console.error(`数据储存失败：QQ 音乐建议专辑榜 ${err.errMsg}`)
+                    },
+                    complete: ()=>{}
+                });
+            },
+            fail: (err)=>{
+                console.error(`数据请求失败：QQ 音乐建议专辑榜 ${err.errMsg}`)
+            }
+        });
         this.globalData.BackgroundAudioManager = wx.getBackgroundAudioManager();
     },
     switchToSearchStatus(currentPage){
@@ -157,31 +181,9 @@ App({
             this.setSongInfoToBAM(BAMInfo);
             // 为全局音乐变量设置属性
             this.setSongInfoToGlobalData(songObjData, result[0], result[1]);
-            // 开始播放
-            BackgroundAudioManager.play();
         })
     },
-    startSearchingContent(searchKeyWord, currentPage){
-        if (/^\s*$/.test(searchKeyWord)) return;
-        wx.request({
-            url: `https://zeyun.org:3443/search?keywords=${searchKeyWord}`,
-            header: {'content-type':'application/json'},
-            method: 'GET',
-            dataType: 'json',
-            responseType: 'text',
-            // 搜索数据请求成功
-            success: (result)=>{
-                console.log(`数据请求完成：搜索关键词 ${searchKeyWord}`);
-                let searchResult = result.data.result.songs;
-                currentPage.setData({isSearching: false, NEMusic_SearchResult: searchResult});
-            },
-            fail: (err)=>{
-                console.error(`数据请求失败：搜索关键词 ${searchKeyWord} ${err.errMsg}`);
-            },
-            complete: ()=>{}
-        });
-    },
-    rollASongInEditorChoiceAndSync(currentPage){
+    rollASongFromEditorChoice(){
         let editor_choice = wx.getStorageSync('editor-choice');
         let rollASongIndex = Math.round(Math.random()*(editor_choice.length-1));
         let songObjData = editor_choice[rollASongIndex];

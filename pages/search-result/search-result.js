@@ -2,7 +2,9 @@
 const app = getApp()
 Page({
     data: {
+        whichMusicSourceSelected: 'NEMusic',
         NEMusic_SearchResult: null,
+        QQMusic_SearchResult: null,
         containerBlur: null,
         searchBarValue: null,
         isSearching: false
@@ -35,6 +37,15 @@ Page({
         // 离开搜索页时清空 serchBar 值 
         app.globalData.searchBarValue = null;
     },
+    switchToNEMusic(){
+        this.setData({whichMusicSourceSelected: 'NEMusic'}) 
+    },
+    switchToQQMusic(){
+        this.setData({whichMusicSourceSelected: 'QQMusic'})
+        if (!this.data.QQMusic_SearchResult){
+            this.getSearchKeyWordAndStartSearchingContent();
+        }
+    },
     switchToSearchStatus(){
         app.switchToSearchStatus(this)
     },
@@ -44,11 +55,51 @@ Page({
     syncValueToGlobalData(event){
         app.syncValueToGlobalData(event)
     },
+    startSearchingContent(searchKeyWord){
+        if (/^\s*$/.test(searchKeyWord)) return;
+        if (this.data.whichMusicSourceSelected === 'NEMusic'){
+            wx.request({
+                url: `https://zeyun.org:3443/search?keywords=${searchKeyWord}`,
+                header: {'content-type':'application/json'},
+                method: 'GET',
+                dataType: 'json',
+                responseType: 'text',
+                // 搜索数据请求成功
+                success: (result)=>{
+                    console.log(`数据请求完成：搜索关键词 ${searchKeyWord}`);
+                    let searchResult = result.data.result.songs;
+                    this.setData({isSearching: false, NEMusic_SearchResult: searchResult});
+                },
+                fail: (err)=>{
+                    console.error(`数据请求失败：搜索关键词 ${searchKeyWord} ${err.errMsg}`);
+                },
+                complete: ()=>{}
+            });
+        } else {
+            wx.request({
+                url: `https://zeyun.org:3444/api/search/song/qq?key=${searchKeyWord}&limit=20&page=1`,
+                header: {'content-type':'application/json'},
+                method: 'GET',
+                dataType: 'json',
+                responseType: 'text',
+                // 搜索数据请求成功
+                success: (result)=>{
+                    console.log(`数据请求完成：搜索关键词 ${searchKeyWord}`);
+                    let searchResult = result.data.songList;
+                    this.setData({isSearching: false, QQMusic_SearchResult: searchResult});
+                },
+                fail: (err)=>{
+                    console.error(`数据请求失败：搜索关键词 ${searchKeyWord} ${err.errMsg}`);
+                },
+                complete: ()=>{}
+            });
+        }
+    },
     getSearchKeyWordAndStartSearchingContent(){
         let searchKeyWord = app.getSearchKeyWord();
         if (!searchKeyWord || /^\s*$/.test(searchKeyWord)) return;
         this.setData({isSearching: true});
-        app.startSearchingContent(searchKeyWord, this);
+        this.startSearchingContent(searchKeyWord);
     },
     longpressToShowJSON(event){
         if (app.globalData.debug) {

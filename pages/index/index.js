@@ -6,11 +6,12 @@ Page({
         nowPlaying: null,
         playButtonStatus: 'to-play',
         containerBlur: null,
-        searchBarValue: null
+        searchBarValue: null,
+        music_song_tips: '编辑推荐'
     },
     onLoad(){
         if (wx.getStorageInfoSync().keys.includes('editor-choice')){
-            app.rollASongInEditorChoiceAndSync(this);
+            app.rollASongFromEditorChoice();
             app.requestForANewEditorChoiceAndSave().then((result)=>{
                 console.log('最新编辑推荐歌单已更新并缓存')
             })
@@ -67,7 +68,6 @@ Page({
         } else if (app.globalData.BackgroundAudioManager.paused){
             // 歌曲暂停或已播放完毕状态
             app.globalData.BackgroundAudioManager.play();
-            console.log(app.globalData.BackgroundAudioManager)
         }
         else {
             // 歌曲正在播放状态

@@ -4,6 +4,20 @@ page {
 }
 .container {
     height: 100%;
+    position: relative;
+}
+.tips {
+    position: absolute;
+    padding: 0 5rpx; 
+    white-space: nowrap;
+    top: 160rpx;
+    right: 50rpx;
+    height: 35rpx;
+    line-height: 35rpx;
+    font-size: 22rpx;
+    border: 1px solid #adb3bb;
+    border-radius: 10rpx;
+    color: #adb3bb;
 }
 .flexContainer {
     position: absolute;
@@ -40,12 +54,12 @@ page {
     flex-basis: 15%;
 }
 .musicInfo--song {
+    position: relative;
     font-size: 50rpx;
-    font-weight: bold;
-    display: block;
-    text-align: center;
     line-height: 120rpx;
     color: #222222;
+    font-weight: bold;
+    text-align: center;
 }
 .musicInfo--sub {
     font-size: 30rpx;
@@ -56,25 +70,36 @@ page {
 .controlButton {
     position: relative;
     flex-basis: 25%;
+    width: 100%;
 }
 .controlButton--container {
+    width: 100%;
+}
+.controlButton--container--forward, .controlButton--container--backward {
+    position: absolute;
+    width: 50rpx;
+    height: 30rpx;
+    background: linear-gradient(to bottom, #5c5c5c, #222222 70%);
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 15rpx;
+    opacity: .2;
+}
+.controlButton--container--forward {
+    left: 20%;
+}
+.controlButton--container--backward {
+    right: 20%;
+}
+.controlButton--container--middle {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-}
-.controlButton--container--forward, .controlButton--container--backward {
-    width: 70rpx;
-    height: 70rpx;
-}
-.controlButton--container--middle {
     display: flex;
-    /* flex-direction: row; */
-    /* justify-content: space-around; */
     align-items: center;
     width: 80rpx;
     height: 80rpx;
-    /* margin: 0 100rpx; */
 }
 .controlButton--container--middle-pause-left,
 .controlButton--container--middle-pause-right {

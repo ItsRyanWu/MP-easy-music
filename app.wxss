@@ -50,14 +50,14 @@
     font-weight: bold;
     line-height: 120rpx;
 }
-.header--musicSource--single {
+.header--musicSource--single{
     position: relative;
 }
 .header--musicSource--single:not(:first-child) {
     margin-left: 40rpx;
 }
 
-.header--musicSource--single:first-child::before {
+.active:first-child::before {
     content: '';
     position: absolute;
     height: 7rpx;
@@ -66,6 +66,16 @@
     left: -4rpx;
     right: -4rpx;
     background-color: #ff5252;
+}
+.active:nth-child(2):before {
+    content: '';
+    position: absolute;
+    height: 7rpx;
+    width: auto;
+    bottom: -10rpx;
+    left: -4rpx;
+    right: -4rpx;
+    background-color: #00bfa5;
 }
 
 .active {
