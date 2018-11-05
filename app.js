@@ -1,18 +1,22 @@
+const utils = require('./utils/util.js');
+const Event = utils.Event
 //app.js
 App({
     globalData: {
         nowPlaying:{
-            songObjData: null,
             songName: null,
-            songAlias: null,
             artistsName: null,
             albumName: null,
-            albumImageUrl: null
+            songUrl: null,
+            albumImageUrl: null,
+            songAlias: null,
+            songObjData: null,
         },
         searchBarValue: null,
         BackgroundAudioManager: null,
         debug: true
     },
+    event: new Event(),
     onLaunch(){
         // 请求排行榜数据
         wx.request({
@@ -101,74 +105,65 @@ App({
             });
         })
     },
-    setSongInfoToGlobalData(songObjData, albumImageUrl){
+    setSongInfoToGlobalData(songObjData, songUrl, albumImageUrl){
         let songId = songObjData.songid;
-        let songName = songObjData.songname;
+        // 为自己创建的全局音乐变量设置属性
         if (songObjData.songalias){
             let songAlias = songObjData.songalias.map((item)=>{
                 return item.name
             }).join(' / ');
             this.globalData.nowPlaying.songAlias = songAlias;
         }
-        let albumName = songObjData.albumname;
-        let artistsName = songObjData.artists.map((item)=>{
-            return item.name
-        }).join(' / ');
-        // 为自己创建的全局音乐变量设置属性
         this.globalData.nowPlaying.songObjData = songObjData;
-        this.globalData.nowPlaying.songName = songName;
-        this.globalData.nowPlaying.artistsName = artistsName;
-        this.globalData.nowPlaying.albumName = albumName;
+        this.globalData.nowPlaying.songName = songObjData.songname;
+        this.globalData.nowPlaying.artistsName = songObjData.artists.map((item)=>{return item.name}).join(' / ');
+        this.globalData.nowPlaying.albumName = songObjData.albumname;
         // 是否解析过专辑封面图像
-        if (albumImageUrl) {
+        if (songUrl && albumImageUrl) {
+            this.globalData.nowPlaying.songUrl = songUrl;
             this.globalData.nowPlaying.albumImageUrl = albumImageUrl;
+            this.event.emit('nowPlayingChanged');
         } else {
-            return new Promise((resolve, reject)=>{
-                this.getAlbumImageUrl(songId).then((result)=>{
-                    let albumImageUrl = result;
-                    this.globalData.nowPlaying.albumImageUrl = albumImageUrl;
-                    resolve(albumImageUrl);
-                });
+            Promise.all([this.getSongSourceUrl(songId), this.getAlbumImageUrl(songId)])
+            .then((result)=>{
+                this.globalData.nowPlaying.songUrl = result[0];
+                this.globalData.nowPlaying.albumImageUrl = result[1];
+                this.event.emit('nowPlayingChanged'); 
             })
         }
     },
-    /**
-     * 
-     * @param {Object} songObjData
-     * 包含四个属性：songid(string), songname(string), albumname(string), artists(array)
-     */
+    setSongInfoToBAM(info){
+        this.globalData.BackgroundAudioManager.title = info.songName;
+        this.globalData.BackgroundAudioManager.singer = info.artistsName;
+        this.globalData.BackgroundAudioManager.epname= info.albumName;
+        this.globalData.BackgroundAudioManager.src = info.songUrl;
+        this.globalData.BackgroundAudioManager.coverImgUrl = info.albumImageUrl;
+    },
     playThisSong(songObjData){
+        let songId = songObjData.songid;
         // 获取背景音频上下文
         let BackgroundAudioManager = this.globalData.BackgroundAudioManager;
-        // 解析关键参数
-        let songId = songObjData.songid;
-        let songName = songObjData.songname;
-        let albumName = songObjData.albumname;
-        let artistsName = songObjData.artists.map((item)=>{
-            return item.name
-        }).join(' / ')
-        // 为背景音频上下文设置属性
-        BackgroundAudioManager.title = songName;
-        BackgroundAudioManager.singer = artistsName;
-        BackgroundAudioManager.epname = ` - ${albumName}`; // hack 解决下拉菜单歌手名与专辑名没有空隙的问题
         // 请求获取歌曲链接以及图片链接
         Promise.all([this.getSongSourceUrl(songId), this.getAlbumImageUrl(songId)])
         .then((result)=>{
-            // 已获取歌曲链接以及图片链接
-            let songSourceUrl = result[0];
-            let albumImageUrl = result[1];
+            let BAMInfo = {
+                songName: songObjData.songname,
+                artistsName: songObjData.artists.map((item)=>{return item.name}).join(' / '),
+                albumName: ` - ${songObjData.albumname}`, // hack 解决下拉菜单歌手名与专辑名没有空隙的问题
+                songUrl: result[0],
+                albumImageUrl: result[1]
+            }
             // 为背景音频上下文设置属性
-            BackgroundAudioManager.src = songSourceUrl;
-            BackgroundAudioManager.coverImgUrl = albumImageUrl;
+            this.setSongInfoToBAM(BAMInfo);
             // 为全局音乐变量设置属性
-            this.setSongInfoToGlobalData(songObjData, albumImageUrl);
+            this.setSongInfoToGlobalData(songObjData, result[0], result[1]);
             // 开始播放
             BackgroundAudioManager.play();
         })
     },
     startSearchingContent(searchKeyWord, currentPage){
         if (/^\s*$/.test(searchKeyWord)) return;
-        var reqTask = wx.request({
+        wx.request({
             url: `https://zeyun.org:3443/search?keywords=${searchKeyWord}`,
             header: {'content-type':'application/json'},
             method: 'GET',
@@ -190,10 +185,7 @@ App({
         let editor_choice = wx.getStorageSync('editor-choice');
         let rollASongIndex = Math.round(Math.random()*(editor_choice.length-1));
         let songObjData = editor_choice[rollASongIndex];
-        this.setSongInfoToGlobalData(songObjData).then(()=>{
-            currentPage.syncGlobalNowPlaying();
-        });
-        currentPage.syncGlobalNowPlaying();
+        this.setSongInfoToGlobalData(songObjData);
     },
     requestForANewEditorChoiceAndSave(){
         return new Promise((resolve, reject)=>{
@@ -226,38 +218,5 @@ App({
             });
         })
     }
-//   onLaunch: function () {
-    // 展示本地存储能力
-    // var logs = wx.getStorageSync('logs') || []
-    // logs.unshift(Date.now())
-    // wx.setStorageSync('logs', logs)
-
-    // 登录
-    // wx.login({
-    //   success: res => {
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
-    //   }
-    // })
-    // 获取用户信息
-    // wx.getSetting({
-    //   success: res => {
-    //     if (res.authSetting['scope.userInfo']) {
-          // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
-        //   wx.getUserInfo({
-        //     success: res => {
-              // 可以将 res 发送给后台解码出 unionId
-            //   this.globalData.userInfo = res.userInfo
-
-              // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-              // 所以此处加入 callback 以防止这种情况
-            //   if (this.userInfoReadyCallback) {
-    //             this.userInfoReadyCallback(res)
-    //           }
-    //         }
-    //       })
-    //     }
-    //   }
-    // })
-//   },
 })
 

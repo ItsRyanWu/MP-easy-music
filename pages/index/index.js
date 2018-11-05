@@ -3,13 +3,7 @@
 const app = getApp()
 Page({
     data: {
-        nowPlaying:{
-            songName: null,
-            artistsName: null,
-            songAlias: null,
-            albumName: null,
-            albumImageUrl: null
-        },
+        nowPlaying: null,
         playButtonStatus: 'to-play',
         containerBlur: null,
         searchBarValue: null
@@ -36,6 +30,11 @@ Page({
         app.globalData.BackgroundAudioManager.onStop(()=>{
             this.setData({playButtonStatus: 'to-play'});
         })
+        app.globalData.BackgroundAudioManager.onEnded(()=>{
+            this.setData({playButtonStatus: 'to-play'});
+            app.setSongInfoToBAM(this.data.nowPlaying);
+        })
+        app.event.on('nowPlayingChanged', this.syncGlobalNowPlaying, this)
     },
     onShow(){
         // 显示该页时同步 globalData 的 searchBar 值
@@ -62,10 +61,16 @@ Page({
         this.setData({nowPlaying: app.globalData.nowPlaying})
     },
     switchPlayPause(){
-        if (app.globalData.BackgroundAudioManager.paused || app.globalData.BackgroundAudioManager.paused == undefined){
+        if (app.globalData.BackgroundAudioManager.paused == undefined ){
+            // 歌曲初始化状态
             app.playThisSong(app.globalData.nowPlaying.songObjData);
-            this.syncGlobalNowPlaying();
-        } else {
+        } else if (app.globalData.BackgroundAudioManager.paused){
+            // 歌曲暂停或已播放完毕状态
+            app.globalData.BackgroundAudioManager.play();
+            console.log(app.globalData.BackgroundAudioManager)
+        }
+        else {
+            // 歌曲正在播放状态
             app.globalData.BackgroundAudioManager.pause();
         }
     }

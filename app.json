@@ -23,10 +23,6 @@
       {
         "text": "音乐库",
         "pagePath": "pages/browser/browser"
-      },
-      {
-        "text": "我的",
-        "pagePath": "pages/browser/browser"
       }
     ]
   },
