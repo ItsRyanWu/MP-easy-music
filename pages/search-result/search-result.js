@@ -2,9 +2,9 @@
 const app = getApp()
 Page({
     data: {
-        whichMusicSourceSelected: 'NEMusic',
-        NEMusic_SearchResult: null,
-        QQMusic_SearchResult: null,
+        source: 'netease',
+        netease: null,
+        qq: null,
         containerBlur: null,
         searchBarValue: null,
         isSearching: false
@@ -38,11 +38,14 @@ Page({
         app.globalData.searchBarValue = null;
     },
     switchToNEMusic(){
-        this.setData({whichMusicSourceSelected: 'NEMusic'}) 
+        this.setData({source: 'netease'}) 
+        if(!this.data.netease){
+            this.getSearchKeyWordAndStartSearchingContent();
+        }
     },
     switchToQQMusic(){
-        this.setData({whichMusicSourceSelected: 'QQMusic'})
-        if (!this.data.QQMusic_SearchResult){
+        this.setData({source: 'qq'})
+        if(!this.data.qq){
             this.getSearchKeyWordAndStartSearchingContent();
         }
     },
@@ -57,43 +60,24 @@ Page({
     },
     startSearchingContent(searchKeyWord){
         if (/^\s*$/.test(searchKeyWord)) return;
-        if (this.data.whichMusicSourceSelected === 'NEMusic'){
-            wx.request({
-                url: `https://zeyun.org:3443/search?keywords=${searchKeyWord}`,
-                header: {'content-type':'application/json'},
-                method: 'GET',
-                dataType: 'json',
-                responseType: 'text',
-                // 搜索数据请求成功
-                success: (result)=>{
-                    console.log(`数据请求完成：搜索关键词 ${searchKeyWord}`);
-                    let searchResult = result.data.result.songs;
-                    this.setData({isSearching: false, NEMusic_SearchResult: searchResult});
-                },
-                fail: (err)=>{
-                    console.error(`数据请求失败：搜索关键词 ${searchKeyWord} ${err.errMsg}`);
-                },
-                complete: ()=>{}
-            });
-        } else {
-            wx.request({
-                url: `https://zeyun.org:3444/api/search/song/qq?key=${searchKeyWord}&limit=20&page=1`,
-                header: {'content-type':'application/json'},
-                method: 'GET',
-                dataType: 'json',
-                responseType: 'text',
-                // 搜索数据请求成功
-                success: (result)=>{
-                    console.log(`数据请求完成：搜索关键词 ${searchKeyWord}`);
-                    let searchResult = result.data.songList;
-                    this.setData({isSearching: false, QQMusic_SearchResult: searchResult});
-                },
-                fail: (err)=>{
-                    console.error(`数据请求失败：搜索关键词 ${searchKeyWord} ${err.errMsg}`);
-                },
-                complete: ()=>{}
-            });
-        }
+        let source = this.data.source
+        wx.request({
+            url: `https://zeyun.org:3444/api/search/song/${source}?key=${searchKeyWord}&limit=30&page=1`,
+            header: {'content-type':'application/json'},
+            method: 'GET',
+            dataType: 'json',
+            responseType: 'text',
+            // 搜索数据请求成功
+            success: (result)=>{
+                console.log(`数据请求完成：${source} 搜索关键词 ${searchKeyWord}`);
+                let searchResult = result.data.songList;
+                this.setData({isSearching: false, [source]: searchResult});
+            },
+            fail: (err)=>{
+                console.error(`数据请求失败：${source} 搜索关键词 ${searchKeyWord} ${err.errMsg}`);
+            },
+            complete: ()=>{}
+        }); 
     },
     getSearchKeyWordAndStartSearchingContent(){
         let searchKeyWord = app.getSearchKeyWord();
@@ -103,12 +87,16 @@ Page({
     },
     longpressToShowJSON(event){
         if (app.globalData.debug) {
-            let songTextData = event.currentTarget.dataset;
-            console.log(JSON.stringify(songTextData));
-        }
+            let songData = event.currentTarget.dataset.songdata;
+            let info = {
+                songData,
+                source: this.data.source
+            }
+            console.log(JSON.stringify(info));
+        } 
     },
     playThisSong(event){
-        let songObjData = event.currentTarget.dataset;
-        app.playThisSong(songObjData);
+        let songData = event.currentTarget.dataset.songdata;
+        app.playThisSong(songData, this.data.source);
     }
 })

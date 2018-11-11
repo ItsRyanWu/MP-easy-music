@@ -90,18 +90,18 @@ App({
         let searchKeyWord = this.globalData.searchBarValue;
         return searchKeyWord;
     },
-    getSongSourceUrl(songId){
+    getSongSourceUrl(songId, source){
         // 默认码率
-        let br = 320000;
+        // let br = 320000;
         return new Promise((resolve, reject)=>{
             wx.request({
-                url: `https://zeyun.org:3443/song/url?id=${songId}&br=${br}`,
+                url: `https://zeyun.org:3444/api/get/song/${source}?id=${songId}`,
                 header: {'content-type':'application/json'},
                 method: 'GET',
                 dataType: 'json',
                 responseType: 'text',
                 success: (result)=>{
-                    resolve(result.data.data[0].url);
+                    resolve(result.data.url);
                 },
                 fail: (err)=>{
                     reject(`获取歌曲 url 错误：${err.errMsg}`)
@@ -111,83 +111,87 @@ App({
             });
         })
     },
-    getAlbumImageUrl(songId){
-        return new Promise((resolve, reject)=>{
-            wx.request({
-                url: `https://zeyun.org:3443/song/detail?ids=${songId}`,
-                header: {'content-type':'application/json'},
-                method: 'GET',
-                dataType: 'json',
-                responseType: 'text',
-                success: (result)=>{
-                    resolve(result.data.songs[0].al.picUrl);
-                },
-                fail: (err)=>{
-                    reject(`获取专辑封面 url 错误：${err.errMsg}`)
-                },
-                complete: ()=>{}
-            });
-        })
-    },
-    setSongInfoToGlobalData(songObjData, songUrl, albumImageUrl){
-        let songId = songObjData.songid;
-        // 为自己创建的全局音乐变量设置属性
-        if (songObjData.songalias){
-            let songAlias = songObjData.songalias.map((item)=>{
-                return item.name
-            }).join(' / ');
-            this.globalData.nowPlaying.songAlias = songAlias;
-        }
-        this.globalData.nowPlaying.songObjData = songObjData;
-        this.globalData.nowPlaying.songName = songObjData.songname;
-        this.globalData.nowPlaying.artistsName = songObjData.artists.map((item)=>{return item.name}).join(' / ');
-        this.globalData.nowPlaying.albumName = songObjData.albumname;
-        // 是否解析过专辑封面图像
-        if (songUrl && albumImageUrl) {
-            this.globalData.nowPlaying.songUrl = songUrl;
-            this.globalData.nowPlaying.albumImageUrl = albumImageUrl;
-            this.event.emit('nowPlayingChanged');
-        } else {
-            Promise.all([this.getSongSourceUrl(songId), this.getAlbumImageUrl(songId)])
-            .then((result)=>{
-                this.globalData.nowPlaying.songUrl = result[0];
-                this.globalData.nowPlaying.albumImageUrl = result[1];
+    // getAlbumImageUrl(songId){
+    //     return new Promise((resolve, reject)=>{
+    //         wx.request({
+    //             url: `https://zeyun.org:3443/song/detail?ids=${songId}`,
+    //             header: {'content-type':'application/json'},
+    //             method: 'GET',
+    //             dataType: 'json',
+    //             responseType: 'text',
+    //             success: (result)=>{
+    //                 resolve(result.data.songs[0].al.picUrl);
+    //             },
+    //             fail: (err)=>{
+    //                 reject(`获取专辑封面 url 错误：${err.errMsg}`)
+    //             },
+    //             complete: ()=>{}
+    //         });
+    //     })
+    // },
+    setSongInfoToGlobalData(songData, source, url){
+        let songId = songData.id;
+        // 如果已经解析过 songUrl
+        if (!url) {
+            // 为自己创建的全局音乐变量设置属性
+            this.globalData.nowPlaying = {
+                songData,
+                source
+            }
+            this.getSongSourceUrl(songId, source)
+            .then(url=>{
+                this.globalData.nowPlaying.url = url;
                 this.event.emit('nowPlayingChanged'); 
             })
+            return;
+        } 
+        // 为自己创建的全局音乐变量设置属性
+        this.globalData.nowPlaying = {
+            songData,
+            source,
+            url
         }
+        // 发布变更消息
+        this.event.emit('nowPlayingChanged');
     },
-    setSongInfoToBAM(info){
+    setSongInfoToBAM(songData, url){
+        let info = {
+            songName: songData.name,
+            artistsName: songData.artists.map(item => item.name).join(' / '),
+            albumName: ` - ${songData.album.name}`, // hack 解决下拉菜单歌手名与专辑名没有空隙的问题
+            songUrl: url,
+            albumImage_small: songData.album.coverSmall
+        }
         this.globalData.BackgroundAudioManager.title = info.songName;
         this.globalData.BackgroundAudioManager.singer = info.artistsName;
         this.globalData.BackgroundAudioManager.epname= info.albumName;
         this.globalData.BackgroundAudioManager.src = info.songUrl;
-        this.globalData.BackgroundAudioManager.coverImgUrl = info.albumImageUrl;
+        this.globalData.BackgroundAudioManager.coverImgUrl = info.albumImage_small;
     },
-    playThisSong(songObjData){
-        let songId = songObjData.songid;
-        // 获取背景音频上下文
-        let BackgroundAudioManager = this.globalData.BackgroundAudioManager;
+    playThisSong(songData, source, url){
+        let songId = songData.id;
         // 请求获取歌曲链接以及图片链接
-        Promise.all([this.getSongSourceUrl(songId), this.getAlbumImageUrl(songId)])
-        .then((result)=>{
-            let BAMInfo = {
-                songName: songObjData.songname,
-                artistsName: songObjData.artists.map((item)=>{return item.name}).join(' / '),
-                albumName: ` - ${songObjData.albumname}`, // hack 解决下拉菜单歌手名与专辑名没有空隙的问题
-                songUrl: result[0],
-                albumImageUrl: result[1]
-            }
-            // 为背景音频上下文设置属性
-            this.setSongInfoToBAM(BAMInfo);
-            // 为全局音乐变量设置属性
-            this.setSongInfoToGlobalData(songObjData, result[0], result[1]);
-        })
+        if (!url){
+            this.getSongSourceUrl(songId, source)
+            .then((url)=>{
+                // 为背景音频上下文设置属性
+                this.setSongInfoToBAM(songData, url);
+                // 为全局音乐变量设置属性
+                this.setSongInfoToGlobalData(songData, source, url);
+            })
+            return;
+        }
+        // 为背景音频上下文设置属性
+        this.setSongInfoToBAM(songData, url);
+        // 为全局音乐变量设置属性
+        this.setSongInfoToGlobalData(songData, source, url);
     },
     rollASongFromEditorChoice(){
         let editor_choice = wx.getStorageSync('editor-choice');
         let rollASongIndex = Math.round(Math.random()*(editor_choice.length-1));
-        let songObjData = editor_choice[rollASongIndex];
-        this.setSongInfoToGlobalData(songObjData);
+        let rollResultData = editor_choice[rollASongIndex];
+        console.log(rollResultData);
+        this.setSongInfoToGlobalData(rollResultData.songData, rollResultData.source);
     },
     requestForANewEditorChoiceAndSave(){
         return new Promise((resolve, reject)=>{

@@ -7,15 +7,15 @@
     <view hidden="{{!music_song_tips}}" class="tips">{{music_song_tips}}</view>
     <view class="flexContainer" style="filter:{{containerBlur}}">
         <view class="albumImage">
-            <image class="albumImage--image" src="{{nowPlaying.albumImageUrl}}" mode="aspectFill"></image>
+            <image class="albumImage--image" src="{{nowPlaying.songData.album.cover}}" mode="aspectFill"></image>
         </view>
         <view class="musicInfo">
             <view class="musicInfo--song">
-                {{nowPlaying.songName}}
+                {{nowPlaying.songData.name}}
             </view>
             <view class="musicInfo--sub">
-                <text class="musicInfo--sub--singer" >{{nowPlaying.artistsName}} - </text>
-                <text class="musicInfo--sub--album" >{{nowPlaying.albumName}}</text>
+                <text class="musicInfo--sub--singer" wx:for="{{nowPlaying.songData.artists}}" >{{item.name}} - </text>
+                <text class="musicInfo--sub--album" >{{nowPlaying.songData.album.name}}</text>
             </view>
         </view>
         <view class="controlButton">

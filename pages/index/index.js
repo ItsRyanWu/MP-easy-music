@@ -63,8 +63,9 @@ Page({
     },
     switchPlayPause(){
         if (app.globalData.BackgroundAudioManager.paused == undefined ){
+            let globalSongStatus = app.globalData.nowPlaying;
             // 歌曲初始化状态
-            app.playThisSong(app.globalData.nowPlaying.songObjData);
+            app.playThisSong(globalSongStatus.songData, globalSongStatus.source);
         } else if (app.globalData.BackgroundAudioManager.paused){
             // 歌曲暂停或已播放完毕状态
             app.globalData.BackgroundAudioManager.play();

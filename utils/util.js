@@ -15,52 +15,57 @@ export const formatNumber = n => {
 }
 
 export class Event {
-    on (event, fn, ctx) {
-        if (typeof fn != "function") {
-            console.error('fn must be a function')
+    constructor(){
+        // 初始化事件调度中心
+        this._eventCenter = {}
+    }
+    /**
+     *
+     * @param {String} eventName 
+     * @param {Function} callback 
+     */
+    on(eventName, callback, context){
+        // 获得该事件的 callback 数组，如果不存在自动创建并向该事件分类 push callbacks 与 context
+        (this._eventCenter[eventName] = this._eventCenter[eventName] || []).push({callback:callback,context:context})
+    }
+    /**
+     * 
+     * @param {String} eventName 
+     * @param {*} prop 
+     */
+    emit(eventName, ...props){
+        // 对该事件类的 callback 执行并带入参数
+        (this._eventCenter[eventName] = this._eventCenter[eventName] || []).forEach((item)=>{
+            item.callback.apply(item.context, props)
+        })
+    }
+    /**
+     * 
+     * @param {String} eventName 
+     * @param {Function} callback 
+     */
+    remove(eventName, ...callbacksTrash){
+        // 如果不传任何参数重置整个事件集则初始化整个 eventCenter
+        if(arguments.length === 0){
+            this._eventCenter = {}
             return
         }
-        
-        this._stores = this._stores || {}
-        
-        ;(this._stores[event] = this._stores[event] || []).push({cb: fn, ctx: ctx})
-    }
-    emit (event) {
-        this._stores = this._stores || {}
-        var store = this._stores[event], args
-        if (store) {
-            store = store.slice(0)
-            args = [].slice.call(arguments, 1)
-            for (var i = 0, len = store.length; i < len; i++) {
-                store[i].cb.apply(store[i].ctx, args)
+        // 如果不传入特定 callback 则删除整个 event 类
+        if(arguments.length === 1){
+            delete this._eventCenter[eventName]
+            return
+        }
+        // 如果传入一个不存在的事件名则提前结束
+        if(!this._eventCenter[eventName]) return
+        // 正式删除
+        let callbacksInThisEvent = this._eventCenter[eventName];
+        for (item1 of callbacksTrash){
+            for (let i in callbacksInThisEvent){
+                if (item1 === callbacksInThisEvent[i].callback) {
+                    callbacksInThisEvent.splice(item2_index, 1)
+                    break
+                }
             }
         }
     }
-    off (event, fn) {
-        this._stores = this._stores || {}
-        // all
-        if (!arguments.length) {
-            this._stores = {}
-            return
-        }
-        // specific event
-        var store = this._stores[event]
-        if (!store) return
-        // remove all handlers
-        if (arguments.length === 1) {
-            delete this._stores[event]
-            return 
-        }
-        // remove specific handler
-        var cb
-        for (var i = 0, len = store.length; i < len; i++) {
-            cb = store[i].cb
-            if (cb === fn) {
-                store.splice(i, 1)
-                break
-            }
-        }
-        return
-    }   
 }
-
