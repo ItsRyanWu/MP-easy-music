@@ -19,68 +19,55 @@ App({
     event: new Event(),
     onLaunch(){
         // 请求排行榜数据
-        wx.request({
-            url: 'https://zeyun.org:3443/top/list?idx=0',
-            header: {'content-type':'application/json'},
-            method: 'GET',
-            dataType: 'json',
-            responseType: 'text',
-            success: (result)=>{
-                console.log('数据请求完成：网易云音乐新歌榜')
-                wx.setStorage({
-                    key: 'NEMusic_NewSongChart',
-                    data: result.data.playlist.tracks,
-                    success: ()=>{
-                        console.log('数据储存完成：网易云音乐新歌榜')
-                    },
-                    fail: (err)=>{
-                        console.error(`数据储存失败：网易云音乐新歌榜 ${err.errMsg}`)
-                    },
-                    complete: ()=>{}
-                });
-            },
-            fail: (err)=>{
-                console.error(`数据请求失败：网易云音乐新歌榜 ${err.errMsg}`)
-            }
-        });
-        wx.request({
-            url: 'https://zeyun.org:3444/api/suggest/album/qq?limit=30',
-            header: {'content-type':'application/json'},
-            method: 'GET',
-            dataType: 'json',
-            responseType: 'text',
-            success: (result)=>{
-                console.log('数据请求完成：QQ 音乐建议专辑榜')
-                wx.setStorage({
-                    key: 'QQMusic_SuggestAlbumChart',
-                    data: result.data.albumList,
-                    success: ()=>{
-                        console.log('数据储存完成：QQ 音乐建议专辑榜')
-                    },
-                    fail: (err)=>{
-                        console.error(`数据储存失败：QQ 音乐建议专辑榜 ${err.errMsg}`)
-                    },
-                    complete: ()=>{}
-                });
-            },
-            fail: (err)=>{
-                console.error(`数据请求失败：QQ 音乐建议专辑榜 ${err.errMsg}`)
-            }
-        });
+        // wx.request({
+        //     url: 'https://zeyun.org:3443/top/list?idx=0',
+        //     header: {'content-type':'application/json'},
+        //     method: 'GET',
+        //     dataType: 'json',
+        //     responseType: 'text',
+        //     success: (result)=>{
+        //         console.log('数据请求完成：网易云音乐新歌榜')
+        //         wx.setStorage({
+        //             key: 'NEMusic_NewSongChart',
+        //             data: result.data.playlist.tracks,
+        //             success: ()=>{
+        //                 console.log('数据储存完成：网易云音乐新歌榜')
+        //             },
+        //             fail: (err)=>{
+        //                 console.error(`数据储存失败：网易云音乐新歌榜 ${err.errMsg}`)
+        //             },
+        //             complete: ()=>{}
+        //         });
+        //     },
+        //     fail: (err)=>{
+        //         console.error(`数据请求失败：网易云音乐新歌榜 ${err.errMsg}`)
+        //     }
+        // });
+        // wx.request({
+        //     url: 'https://zeyun.org:3444/api/suggest/album/qq?limit=30',
+        //     header: {'content-type':'application/json'},
+        //     method: 'GET',
+        //     dataType: 'json',
+        //     responseType: 'text',
+        //     success: (result)=>{
+        //         console.log('数据请求完成：QQ 音乐建议专辑榜')
+        //         wx.setStorage({
+        //             key: 'QQMusic_SuggestAlbumChart',
+        //             data: result.data.albumList,
+        //             success: ()=>{
+        //                 console.log('数据储存完成：QQ 音乐建议专辑榜')
+        //             },
+        //             fail: (err)=>{
+        //                 console.error(`数据储存失败：QQ 音乐建议专辑榜 ${err.errMsg}`)
+        //             },
+        //             complete: ()=>{}
+        //         });
+        //     },
+        //     fail: (err)=>{
+        //         console.error(`数据请求失败：QQ 音乐建议专辑榜 ${err.errMsg}`)
+        //     }
+        // });
         this.globalData.BackgroundAudioManager = wx.getBackgroundAudioManager();
-    },
-    switchToSearchStatus(currentPage){
-        // 激活 serchBar 时 blur 主页面
-        currentPage.setData({containerBlur: 'blur(40rpx) saturate(150%)'});
-    },
-    switchToNormalStatus(currentPage){
-        // 取消激活 serchBar 时取消 blur 主页面
-        currentPage.setData({containerBlur: null});
-        // 如果搜索栏为空则清空所有搜索数据，初始化为未搜索状态
-        if (!this.globalData.searchBarValue || /^\s*$/.test(this.globalData.searchBarValue)) {
-            console.log('搜索栏已空，清除所有搜索数据');
-            currentPage.setData({searchBarValue: null})
-        }
     },
     syncValueToGlobalData(event){
         // 监听输入事件同步 serchBar 值至全局变量
@@ -90,9 +77,9 @@ App({
         let searchKeyWord = this.globalData.searchBarValue;
         return searchKeyWord;
     },
-    getSongSourceUrl(songId, source){
-        // 默认码率
-        // let br = 320000;
+    getSongSourceUrl(dataset){
+        let songId = dataset.songdata.id;
+        let source = dataset.source;
         return new Promise((resolve, reject)=>{
             wx.request({
                 url: `https://zeyun.org:3444/api/get/song/${source}?id=${songId}`,
@@ -129,38 +116,33 @@ App({
     //         });
     //     })
     // },
-    setSongInfoToGlobalData(songData, source, url){
-        let songId = songData.id;
+    setSongInfoToGlobalData(dataset){
         // 如果已经解析过 songUrl
-        if (!url) {
+        if (!dataset.url) {
             // 为自己创建的全局音乐变量设置属性
-            this.globalData.nowPlaying = {
-                songData,
-                source
-            }
-            this.getSongSourceUrl(songId, source)
+            this.globalData.nowPlaying = dataset;
+            this.event.emit('nowPlayingChanged');
+            this.getSongSourceUrl(dataset)
             .then(url=>{
                 this.globalData.nowPlaying.url = url;
                 this.event.emit('nowPlayingChanged'); 
+            }).catch(err=>{
+                console.log(err);
             })
             return;
         } 
         // 为自己创建的全局音乐变量设置属性
-        this.globalData.nowPlaying = {
-            songData,
-            source,
-            url
-        }
+        this.globalData.nowPlaying = dataset;
         // 发布变更消息
         this.event.emit('nowPlayingChanged');
     },
-    setSongInfoToBAM(songData, url){
+    setSongInfoToBAM(dataset){
         let info = {
-            songName: songData.name,
-            artistsName: songData.artists.map(item => item.name).join(' / '),
-            albumName: ` - ${songData.album.name}`, // hack 解决下拉菜单歌手名与专辑名没有空隙的问题
-            songUrl: url,
-            albumImage_small: songData.album.coverSmall
+            songName: dataset.songdata.name,
+            artistsName: dataset.songdata.artists.map(item => item.name).join(' / '),
+            albumName: ` - ${dataset.songdata.album.name}`, // hack 解决下拉菜单歌手名与专辑名没有空隙的问题
+            songUrl: dataset.url,
+            albumImage_small: dataset.songdata.album.cover
         }
         this.globalData.BackgroundAudioManager.title = info.songName;
         this.globalData.BackgroundAudioManager.singer = info.artistsName;
@@ -168,30 +150,29 @@ App({
         this.globalData.BackgroundAudioManager.src = info.songUrl;
         this.globalData.BackgroundAudioManager.coverImgUrl = info.albumImage_small;
     },
-    playThisSong(songData, source, url){
-        let songId = songData.id;
+    playThisSong(dataset){
         // 请求获取歌曲链接以及图片链接
-        if (!url){
-            this.getSongSourceUrl(songId, source)
+        if (!dataset.url){
+            this.getSongSourceUrl(dataset)
             .then((url)=>{
+                dataset.url = url;
                 // 为背景音频上下文设置属性
-                this.setSongInfoToBAM(songData, url);
+                this.setSongInfoToBAM(dataset);
                 // 为全局音乐变量设置属性
-                this.setSongInfoToGlobalData(songData, source, url);
+                this.setSongInfoToGlobalData(dataset);
             })
             return;
         }
         // 为背景音频上下文设置属性
-        this.setSongInfoToBAM(songData, url);
+        this.setSongInfoToBAM(dataset);
         // 为全局音乐变量设置属性
-        this.setSongInfoToGlobalData(songData, source, url);
+        this.setSongInfoToGlobalData(dataset);
     },
     rollASongFromEditorChoice(){
         let editor_choice = wx.getStorageSync('editor-choice');
         let rollASongIndex = Math.round(Math.random()*(editor_choice.length-1));
         let rollResultData = editor_choice[rollASongIndex];
-        console.log(rollResultData);
-        this.setSongInfoToGlobalData(rollResultData.songData, rollResultData.source);
+        this.setSongInfoToGlobalData(rollResultData);
     },
     requestForANewEditorChoiceAndSave(){
         return new Promise((resolve, reject)=>{

@@ -1,6 +1,6 @@
 /**app.wxss**/
 .container {
-  padding: 0 20rpx;
+  padding: 0 20rpx 20rpx;
   box-sizing: border-box;
   background-color: #ECEFF2;
 } 
@@ -12,8 +12,10 @@
     transform: translateX(-50%);
     height: 120rpx;
     background-color: white;
-    /* box-shadow: 0rpx 30rpx 40rpx -20rpx rgba(95, 95, 95, 0.3); */
     z-index: 1;
+}
+.searchBoxContainer__active {
+    box-shadow: 0rpx 30rpx 40rpx -20rpx rgba(95, 95, 95, 0.3);
 }
 .searchBox {
     position: absolute;
@@ -30,10 +32,13 @@
     font-size: 30rpx;
     color: #8E8E93;
 }
+.belowSearchBoxContainer__blur {
+    filter: blur(40rpx) saturate(150%);
+}
 .header {
     display: flex;
     margin-top: 120rpx;
-    height: 120rpx;
+    height: 140rpx;
     padding: 0 30rpx;
     transition: filter .2s linear;
     justify-content: space-between;
@@ -42,13 +47,13 @@
     font-size: 60rpx;
     font-weight: bold;
     color: #222222;
-    line-height: 120rpx;
+    line-height: 140rpx;
 }
 .header--musicSource {
     font-size: 30rpx;
     color: #8E8E93;
     font-weight: bold;
-    line-height: 120rpx;
+    line-height: 140rpx;
 }
 .header--musicSource--single{
     position: relative;
@@ -57,7 +62,7 @@
     margin-left: 40rpx;
 }
 
-.active:first-child::before {
+.header--musicSource--single__active:first-child::before {
     content: '';
     position: absolute;
     height: 7rpx;
@@ -67,7 +72,7 @@
     right: -4rpx;
     background-color: #ff5252;
 }
-.active:nth-child(2):before {
+.header--musicSource--single__active:nth-child(2):before {
     content: '';
     position: absolute;
     height: 7rpx;
@@ -78,7 +83,7 @@
     background-color: #00bfa5;
 }
 
-.active {
+.header--musicSource--single__active {
     color: #222222;
 }
 .listCard--single__loading {

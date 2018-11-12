@@ -2,41 +2,32 @@
 const app = getApp()
 Page({
     data: {
-        whichMusicSourceSelected: 'NEMusic',
-        NEMusic_NewSongChart: null,
-        QQMusic_SuggestAlbumChart: null,
-        containerBlur: null,
+        editorChoiceData: null,
+        isSearchBoxFoucs: false,
         searchBarValue: null
     },
     onShow(){
         // 显示该页时同步 globalData 的 searchBar 值
         this.setData({searchBarValue: app.globalData.searchBarValue});
         try {
-            var NEMusic_NewSongChart = wx.getStorageSync('NEMusic_NewSongChart');
-            console.log(`读取数据成功：网易云音乐新歌榜`)
+            var editorChoiceData = wx.getStorageSync('editor-choice');
+            console.log(`读取数据成功：编辑推荐歌单`)
         } catch (err) {
-            console.log(`读取数据失败：网易云音乐新歌榜 ${err.errMsg}`)
+            console.log(`读取数据失败：编辑推荐歌单 ${err.errMsg}`)
         }
-        this.setData({NEMusic_NewSongChart: NEMusic_NewSongChart})
-        try {
-            var QQMusic_SuggestAlbumChart = wx.getStorageSync('QQMusic_SuggestAlbumChart');
-            console.log(`读取数据成功：网易云音乐新歌榜`)
-        } catch (err) {
-            console.log(`读取数据失败：网易云音乐新歌榜 ${err.errMsg}`)
+        this.setData({editorChoiceData})
+    },
+    focusSearchBox(){
+        this.setData({isSearchBoxFoucs: true})
+    },
+    unfocusSearchBox(){
+        this.setData({isSearchBoxFoucs: false})
+        // 如果搜索栏为空则清空所有搜索数据，初始化为未搜索状态
+        let globalSearchBarValue = app.globalData.searchBarValue;
+        if (!globalSearchBarValue || /^\s*$/.test(globalSearchBarValue)) {
+            console.log('搜索栏已空，清除所有搜索数据');
+            this.setData({searchBarValue: null})
         }
-        this.setData({QQMusic_SuggestAlbumChart: QQMusic_SuggestAlbumChart})
-    },
-    switchToNEMusic(){
-        this.setData({whichMusicSourceSelected: 'NEMusic'}) 
-    },
-    switchToQQMusic(){
-        this.setData({whichMusicSourceSelected: 'QQMusic'}) 
-    },
-    switchToSearchStatus(){
-        app.switchToSearchStatus(this)
-    },
-    switchToNormalStatus(){
-        app.switchToNormalStatus(this)
     },
     syncValueToGlobalData(event){
         app.syncValueToGlobalData(event)
@@ -49,7 +40,8 @@ Page({
         });
     },
     playThisSong(event){
-        let songTextData = event.currentTarget.dataset;
-        app.playThisSong(songTextData);
+        let dataset = event.currentTarget.dataset;
+        console.log(dataset)
+        app.playThisSong(dataset);
     },
 })

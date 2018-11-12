@@ -5,7 +5,7 @@ Page({
         source: 'netease',
         netease: null,
         qq: null,
-        containerBlur: null,
+        isSearchBoxFoucs: false,
         searchBarValue: null,
         isSearching: false
     },
@@ -14,7 +14,8 @@ Page({
         this.setData({searchBarValue: app.globalData.searchBarValue});
         if('search' in redirectParameters){
             console.log('result-page: 接收到搜索命令，开始搜索。')
-            this.getSearchKeyWordAndStartSearchingContent();
+            let searchKeyWord = redirectParameters.search;
+            this.startSearchingContent(searchKeyWord);
         }
     },
     onShow(){
@@ -40,26 +41,33 @@ Page({
     switchToNEMusic(){
         this.setData({source: 'netease'}) 
         if(!this.data.netease){
-            this.getSearchKeyWordAndStartSearchingContent();
+            this.startSearchingContent(app.globalData.searchBarValue);
         }
     },
     switchToQQMusic(){
         this.setData({source: 'qq'})
         if(!this.data.qq){
-            this.getSearchKeyWordAndStartSearchingContent();
+            this.startSearchingContent(app.globalData.searchBarValue);
         }
     },
-    switchToSearchStatus(){
-        app.switchToSearchStatus(this)
+    focusSearchBox(){
+        this.setData({isSearchBoxFoucs: true})
     },
-    switchToNormalStatus(){
-        app.switchToNormalStatus(this)
+    unfocusSearchBox(){
+        this.setData({isSearchBoxFoucs: false})
+        // 如果搜索栏为空则清空所有搜索数据，初始化为未搜索状态
+        let globalSearchBarValue = app.globalData.searchBarValue;
+        if (!globalSearchBarValue || /^\s*$/.test(globalSearchBarValue)) {
+            console.log('搜索栏已空，清除所有搜索数据');
+            this.setData({searchBarValue: null})
+        }
     },
     syncValueToGlobalData(event){
         app.syncValueToGlobalData(event)
     },
     startSearchingContent(searchKeyWord){
-        if (/^\s*$/.test(searchKeyWord)) return;
+        this.setData({isSearching: true});
+        this.setData({searchBarValue: searchKeyWord});
         let source = this.data.source
         wx.request({
             url: `https://zeyun.org:3444/api/search/song/${source}?key=${searchKeyWord}&limit=30&page=1`,
@@ -79,24 +87,27 @@ Page({
             complete: ()=>{}
         }); 
     },
-    getSearchKeyWordAndStartSearchingContent(){
+    cleanSearchData(source){
+        if(!source){
+            this.setData({qq: null, netease:null})
+        } else {
+            this.setData({[source]: null})
+        }
+    },
+    startSearchInSRPage(){
         let searchKeyWord = app.getSearchKeyWord();
         if (!searchKeyWord || /^\s*$/.test(searchKeyWord)) return;
-        this.setData({isSearching: true});
+        this.cleanSearchData();
         this.startSearchingContent(searchKeyWord);
     },
     longpressToShowJSON(event){
         if (app.globalData.debug) {
-            let songData = event.currentTarget.dataset.songdata;
-            let info = {
-                songData,
-                source: this.data.source
-            }
-            console.log(JSON.stringify(info));
+            let dataset = event.currentTarget.dataset;
+            console.log(JSON.stringify(dataset));
         } 
     },
     playThisSong(event){
-        let songData = event.currentTarget.dataset.songdata;
-        app.playThisSong(songData, this.data.source);
+        let dataset = event.currentTarget.dataset;
+        app.playThisSong(dataset);
     }
 })

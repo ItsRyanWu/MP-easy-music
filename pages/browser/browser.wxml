@@ -1,61 +1,31 @@
 <view class="container">
-    <view class="searchBoxContainer">
+    <view class="searchBoxContainer {{isSearchBoxFoucs ? 'searchBoxContainer__active' : null}}">
         <input class="searchBox" type="text" value="{{searchBarValue}}" placeholder="同时搜索「网易云音乐」与「QQ 音乐」" cursor-spacing="20" placeholder-class="input-placeholder" maxlength="20" confirm-type="search" 
-        adjust-position="{{false}}" bindconfirm="getSearchKeyWordAndNavigatingToSearchResult" bindtap="switchToSearchStatus" bindblur="switchToNormalStatus" bindinput="syncValueToGlobalData"></input>
+        adjust-position="{{false}}" bindconfirm="getSearchKeyWordAndNavigatingToSearchResult" bindtap="focusSearchBox" bindblur="unfocusSearchBox" bindinput="syncValueToGlobalData"></input>
     </view>
-    <view class="header" style="filter:{{containerBlur}}">
+    <view class="header {{isSearchBoxFoucs ? 'belowSearchBoxContainer__blur' : null}}">
         <view class="header--chart">
-            <text class="header--chart--single">新歌榜</text>
-        </view>
-        <view class="header--musicSource">
-            <text class="header--musicSource--single {{whichMusicSourceSelected === 'NEMusic' ? 'active' : null}}" bindtap="switchToNEMusic">网易云音乐</text>
-            <text class="header--musicSource--single {{whichMusicSourceSelected === 'QQMusic' ? 'active' : null}}" bindtap="switchToQQMusic">QQ 音乐</text>
+            <text class="header--chart--single">编辑推荐</text>
         </view>
     </view>
-    <view wx:if="{{whichMusicSourceSelected === 'NEMusic'}}" class="listCard" style="filter:{{containerBlur}}">
+    <view  class="listCard {{isSearchBoxFoucs ? 'belowSearchBoxContainer__blur' : null}}">
         <!-- 缓冲画面 -->
-        <view hidden="{{NEMusic_NewSongChart}}" wx:for="{{[1,2,3,4,5,6,7,8,9,10]}}"  class="listCard--single__loading">
+        <view hidden="{{editorChoiceData}}" wx:for="{{[1,2,3,4,5,6,7,8,9,10]}}"  class="listCard--single__loading">
             <view class="listCard--single--song__loading"></view>
             <view class="listCard--single--subInfo__loading"></view>
         </view>
-        <view wx:for="{{NEMusic_NewSongChart}}" class="listCard--single" bindtap="playThisSong" data-songName="{{item.name}}" data-songId="{{item.id}}" data-albumName="{{item.al.name}}" data-albumId="{{item.al.id}}" data-artists="{{item.ar}}" data-songAlias="{{item.alias}}">
-            <view class="listCard--single--song" selectable="true">
-                {{item.name}}
-                <view wx:for="{{item.alias}}" class="listCard--single--song--alias" >
-                    ({{item}})
-                </view>
+        <view wx:for="{{editorChoiceData}}" class="listCard--single" bindtap="playThisSong" 
+        data-songdata="{{item.songdata}}"data-source="{{item.source}}">
+           <view class="listCard--single--song" selectable="true">
+                {{item.songdata.name}}
             </view>
             <view class="listCard--single--subInfo">
-                <view wx:for="{{item.ar}}" class="listCard--single--artist--single">
+                <view wx:for="{{item.songdata.artists}}" class="listCard--single--artist--single">
                     {{item.name}}
                 </view>
                 -
                 <view class="listCard--single--album">
-                    {{item.al.name}}
-                </view>
-            </view>
-        </view>
-    </view>
-    <view wx:elif="{{whichMusicSourceSelected === 'QQMusic'}}" class="listCard" style="filter:{{containerBlur}}">
-        <!-- 缓冲画面 -->
-        <view hidden="{{QQMusic_SuggestAlbumChart}}" wx:for="{{[1,2,3,4,5,6,7,8,9,10]}}"  class="listCard--single__loading">
-            <view class="listCard--single--song__loading"></view>
-            <view class="listCard--single--subInfo__loading"></view>
-        </view>
-        <view wx:for="{{QQMusic_SuggestAlbumChart}}" class="listCard--single" data-songName="{{item.name}}" data-songId="{{item.id}}" data-albumName="{{item.al.name}}" data-albumId="{{item.al.id}}" data-artists="{{item.ar}}" data-songAlias="{{item.alias}}">
-            <view class="listCard--single--song" selectable="true">
-                {{item.name}}
-                <view wx:for="{{item.alias}}" class="listCard--single--song--alias" >
-                    ({{item}})
-                </view>
-            </view>
-            <view class="listCard--single--subInfo">
-                <view class="listCard--single--artist--single">
-                    {{item.artist.name}}
-                </view>
-                -
-                <view class="listCard--single--album">
-                    {{item.name}}
+                    {{item.songdata.album.name}}
                 </view>
             </view>
         </view>

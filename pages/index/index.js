@@ -5,7 +5,7 @@ Page({
     data: {
         nowPlaying: null,
         playButtonStatus: 'to-play',
-        containerBlur: null,
+        isSearchBoxFoucs: false,
         searchBarValue: null,
         music_song_tips: '编辑推荐'
     },
@@ -23,15 +23,19 @@ Page({
         }
         // 监听事件背景音乐上下文
         app.globalData.BackgroundAudioManager.onPlay(()=>{
+            console.log('BAM 开始播放', app.globalData.BackgroundAudioManager)
             this.setData({playButtonStatus: 'to-pause'});
         })
         app.globalData.BackgroundAudioManager.onPause(()=>{
+            console.log('BAM 已暂停', app.globalData.BackgroundAudioManager)
             this.setData({playButtonStatus: 'to-play'});
         })
         app.globalData.BackgroundAudioManager.onStop(()=>{
+            console.log('BAM 已停止', app.globalData.BackgroundAudioManager)
             this.setData({playButtonStatus: 'to-play'});
         })
         app.globalData.BackgroundAudioManager.onEnded(()=>{
+            console.log('BAM 已结束', app.globalData.BackgroundAudioManager)
             this.setData({playButtonStatus: 'to-play'});
             app.setSongInfoToBAM(this.data.nowPlaying);
         })
@@ -42,11 +46,17 @@ Page({
         this.syncGlobalNowPlaying();
         this.setData({searchBarValue: app.globalData.searchBarValue});
     },
-    switchToSearchStatus(){
-        app.switchToSearchStatus(this)
+    focusSearchBox(){
+        this.setData({isSearchBoxFoucs: true})
     },
-    switchToNormalStatus(){
-        app.switchToNormalStatus(this)
+    unfocusSearchBox(){
+        this.setData({isSearchBoxFoucs: false})
+        // 如果搜索栏为空则清空所有搜索数据，初始化为未搜索状态
+        let globalSearchBarValue = app.globalData.searchBarValue;
+        if (!globalSearchBarValue || /^\s*$/.test(globalSearchBarValue)) {
+            console.log('搜索栏已空，清除所有搜索数据');
+            this.setData({searchBarValue: null})
+        }
     },
     syncValueToGlobalData(event){
         app.syncValueToGlobalData(event)
@@ -62,17 +72,22 @@ Page({
         this.setData({nowPlaying: app.globalData.nowPlaying})
     },
     switchPlayPause(){
-        if (app.globalData.BackgroundAudioManager.paused == undefined ){
-            let globalSongStatus = app.globalData.nowPlaying;
-            // 歌曲初始化状态
-            app.playThisSong(globalSongStatus.songData, globalSongStatus.source);
-        } else if (app.globalData.BackgroundAudioManager.paused){
-            // 歌曲暂停或已播放完毕状态
-            app.globalData.BackgroundAudioManager.play();
+        let BAM = app.globalData.BackgroundAudioManager;
+        if (BAM.paused == undefined ){
+            // BAM 初始化设置 dataset
+            app.playThisSong(this.data.nowPlaying);
+        } else if (BAM.paused){
+            if (BAM.src.length > 0){
+                // 继续播放
+                BAM.play();
+                return;
+            } else {
+                // BAM 初始化设置 dataset
+                app.playThisSong(this.data.nowPlaying);
+                return;
+            }
         }
-        else {
-            // 歌曲正在播放状态
-            app.globalData.BackgroundAudioManager.pause();
-        }
+        // 歌曲正在播放状态 paused === true
+        BAM.pause();
     }
 })
