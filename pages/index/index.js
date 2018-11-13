@@ -5,20 +5,21 @@ Page({
     data: {
         nowPlaying: null,
         playButtonStatus: 'to-play',
-        isSearchBoxFoucs: false,
-        searchBarValue: null,
-        music_song_tips: '编辑推荐'
+        music_song_tips: '编辑推荐',
+        isBlur: false
     },
     onLoad(){
         if (wx.getStorageInfoSync().keys.includes('editor-choice')){
-            app.rollASongFromEditorChoice();
-            app.requestForANewEditorChoiceAndSave().then((result)=>{
+            this.rollASongFromEditorChoice();
+            app.requestForANewEditorChoiceAndSave()
+            .then((result)=>{
                 console.log('最新编辑推荐歌单已更新并缓存')
             })
         } else {
-            app.requestForANewEditorChoiceAndSave().then((result)=>{
+            app.requestForANewEditorChoiceAndSave()
+            .then((result)=>{
                 console.log('初始化下载编辑推荐歌单成功并缓存')
-                app.rollASongInEditorChoiceAndSync(this);
+                this.rollASongFromEditorChoice();
             })
         }
         // 监听事件背景音乐上下文
@@ -46,31 +47,6 @@ Page({
         this.syncGlobalNowPlaying();
         this.setData({searchBarValue: app.globalData.searchBarValue});
     },
-    focusSearchBox(){
-        this.setData({isSearchBoxFoucs: true})
-    },
-    unfocusSearchBox(){
-        this.setData({isSearchBoxFoucs: false})
-        // 如果搜索栏为空则清空所有搜索数据，初始化为未搜索状态
-        let globalSearchBarValue = app.globalData.searchBarValue;
-        if (!globalSearchBarValue || /^\s*$/.test(globalSearchBarValue)) {
-            console.log('搜索栏已空，清除所有搜索数据');
-            this.setData({searchBarValue: null})
-        }
-    },
-    syncValueToGlobalData(event){
-        app.syncValueToGlobalData(event)
-    },
-    getSearchKeyWordAndNavigatingToSearchResult(){
-        let searchKeyWord = app.getSearchKeyWord();
-        if (!searchKeyWord || /^\s*$/.test(searchKeyWord)) return;
-        wx.navigateTo({
-            url: `../search-result/search-result?search=${searchKeyWord}`
-        });
-    },
-    syncGlobalNowPlaying(){
-        this.setData({nowPlaying: app.globalData.nowPlaying})
-    },
     switchPlayPause(){
         let BAM = app.globalData.BackgroundAudioManager;
         if (BAM.paused == undefined ){
@@ -89,5 +65,14 @@ Page({
         }
         // 歌曲正在播放状态 paused === true
         BAM.pause();
+    },
+    rollASongFromEditorChoice(){
+        let editor_choice = wx.getStorageSync('editor-choice');
+        let rollASongIndex = Math.round(Math.random()*(editor_choice.length-1));
+        let rollResultData = editor_choice[rollASongIndex];
+        app.setSongInfoToGlobalData(rollResultData);
+    },
+    syncGlobalNowPlaying(){
+        this.setData({nowPlaying: app.globalData.nowPlaying})
     }
 })

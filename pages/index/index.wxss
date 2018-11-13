@@ -21,7 +21,7 @@ page {
 }
 .flexContainer {
     position: absolute;
-    top: 120rpx;
+    top: 100rpx;
     bottom: 0;
     left: 0;
     right: 0;

@@ -1,9 +1,6 @@
 <view class="container">
-    <view class="searchBoxContainer {{isSearchBoxFoucs ? 'searchBoxContainer__active' : null}}">
-        <input class="searchBox" type="text" value="{{searchBarValue}}" placeholder="同时搜索「网易云音乐」与「QQ 音乐」" cursor-spacing="20" placeholder-class="input-placeholder" maxlength="20" confirm-type="search" 
-        adjust-position="{{false}}" bindconfirm="startSearchInSRPage" bindtap="focusSearchBox" bindblur="unfocusSearchBox" bindinput="syncValueToGlobalData"></input>
-    </view>
-    <view class="header {{isSearchBoxFoucs ? 'belowSearchBoxContainer__blur' : null}}">
+    <search-bar-container></search-bar-container>
+    <view class="header {{isBlur ? 'belowSearchBoxContainer__blur' : null}}">
         <view class="header--chart">
             <text class="header--chart--single">搜索结果</text>
         </view>
@@ -12,9 +9,9 @@
             <text class="header--musicSource--single {{source === 'qq' ? 'header--musicSource--single__active' : null}}" bindtap="switchToQQMusic">QQ 音乐</text>
         </view>
     </view>
-    <view class="listCard {{isSearchBoxFoucs ? 'belowSearchBoxContainer__blur' : null}}">
+    <view class="listCard {{isBlur ? 'belowSearchBoxContainer__blur' : null}}">
         <!-- 缓冲画面 -->
-        <view hidden="{{!isSearching}}" wx:for="{{[1,2,3,4,5,6,7,8,9,10]}}"  class="listCard--single__loading">
+        <view hidden="{{!isSearching}}" wx:for="{{[1,2,3,4,5,6,7,8]}}"  class="listCard--single__loading">
             <view class="listCard--single--song__loading"></view>
             <view class="listCard--single--subInfo__loading"></view>
         </view>

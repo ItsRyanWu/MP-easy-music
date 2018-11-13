@@ -44,7 +44,7 @@ export class Event {
      * @param {String} eventName 
      * @param {Function} callback 
      */
-    remove(eventName, ...callbacksTrash){
+    remove(eventName, ...callbackTrash){
         // 如果不传任何参数重置整个事件集则初始化整个 eventCenter
         if(arguments.length === 0){
             this._eventCenter = {}
@@ -57,12 +57,12 @@ export class Event {
         }
         // 如果传入一个不存在的事件名则提前结束
         if(!this._eventCenter[eventName]) return
-        // 正式删除
+        // 删除指定的 callback
         let callbacksInThisEvent = this._eventCenter[eventName];
-        for (item1 of callbacksTrash){
+        for (let callbackToDelete of callbackTrash){
             for (let i in callbacksInThisEvent){
-                if (item1 === callbacksInThisEvent[i].callback) {
-                    callbacksInThisEvent.splice(item2_index, 1)
+                if (callbackToDelete === callbacksInThisEvent[i].callback) {
+                    callbacksInThisEvent.splice(i, 1)
                     break
                 }
             }

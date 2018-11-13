@@ -2,27 +2,38 @@
   "pages":[
     "pages/index/index",
     "pages/browser/browser",
+    "pages/me/me",
     "pages/search-result/search-result"
   ],
   "window":{
     "backgroundTextStyle":"dark",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "简单搜歌",
+    "navigationBarTitleText": "简单听歌",
     "navigationBarTextStyle":"black"
   },
   "tabBar":{
-    "color": "#8E8E93",
+    "color": "#adb3bb",
     "selectedColor": "#222222",
     "backgroundColor": "#fff",
-    "borderStyle": "white",
+    "borderStyle": "black",
     "list": [
       {
         "text": "正在播放",
-        "pagePath": "pages/index/index"
+        "pagePath": "pages/index/index",
+        "iconPath": "/img/music-outline.png",
+        "selectedIconPath": "/img/music.png"
       },
       {
-        "text": "音乐库",
-        "pagePath": "pages/browser/browser"
+        "text": "编辑推荐",
+        "pagePath": "pages/browser/browser",
+        "iconPath": "/img/star-outline.png",
+        "selectedIconPath": "/img/star.png"
+      },
+      {
+        "text": "我的歌单",
+        "pagePath": "pages/me/me",
+        "iconPath": "/img/person-outline.png",
+        "selectedIconPath": "/img/person.png"
       }
     ]
   },

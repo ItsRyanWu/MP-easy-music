@@ -2,16 +2,16 @@
     <search-bar-container></search-bar-container>
     <view class="header {{isBlur ? 'belowSearchBoxContainer__blur' : null}}">
         <view class="header--chart">
-            <text class="header--chart--single">编辑推荐</text>
+            <text class="header--chart--single">我的歌单</text>
         </view>
     </view>
     <view  class="listCard {{isBlur ? 'belowSearchBoxContainer__blur' : null}}">
         <!-- 缓冲画面 -->
-        <view hidden="{{editorChoiceData}}" wx:for="{{[1,2,3,4,5,6,7,8]}}"  class="listCard--single__loading">
+        <view hidden="{{editorChoiceData}}" wx:for="{{[1,2,3,4]}}"  class="listCard--single__loading">
             <view class="listCard--single--song__loading"></view>
             <view class="listCard--single--subInfo__loading"></view>
         </view>
-        <view wx:for="{{editorChoiceData}}" class="listCard--single" bindtap="playThisSong" 
+        <!-- <view wx:for="{{editorChoiceData}}" class="listCard--single" bindtap="playThisSong" 
         data-songdata="{{item.songdata}}"data-source="{{item.source}}">
            <view class="listCard--single--song" selectable="true">
                 {{item.songdata.name}}
@@ -25,6 +25,6 @@
                     {{item.songdata.album.name}}
                 </view>
             </view>
-        </view>
+        </view> -->
     </view>
 </view>

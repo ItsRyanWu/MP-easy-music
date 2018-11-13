@@ -1,2 +1,5 @@
 {
+    "usingComponents": {
+        "search-bar-container": "/components/search-bar-container/search-bar-container"
+    }
 }

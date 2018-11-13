@@ -1,0 +1,36 @@
+.searchBoxContainer {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100rpx;
+    background-color: white;
+    z-index: 1;
+}
+.searchBoxContainer__active {
+    box-shadow: 0rpx 30rpx 40rpx -20rpx rgba(95, 95, 95, 0.3);
+}
+.searchBoxContainer--searchBox {
+    position: absolute;
+    width: 77%;
+    height: 80rpx;
+    width: auto;
+    top: 5%;
+    left: 20rpx;
+    right: 150rpx;
+    padding: 0 40rpx;
+    border-radius: 100rpx;
+    background-color: #f2f4f6;
+}
+.searchBoxContainer--listBtn {
+    position: absolute;
+    width: 80rpx;
+    height: 80rpx;
+    right: 30rpx;
+    top: 5%;
+}
+.input-placeholder {
+    font-size: 30rpx;
+    color: #8E8E93;
+}
