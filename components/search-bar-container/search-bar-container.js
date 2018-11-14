@@ -15,7 +15,7 @@ Component({
         attached(){
             this.setCurrentPage();
             this.updatePlaylist();
-            app.event.on('updatePlaylist', this.updatePlaylist, this)
+            app.event.on('update-playlist', this.updatePlaylist, this)
         }
     },
     pageLifetimes:{
@@ -80,9 +80,9 @@ Component({
         },
         handleSongClick(event){
             let dataset = event.currentTarget.dataset;
-            if(event.target.id === "listCard--single--like"){
-                app.addThisSongToPlaylist(dataset);
-                app.event.emit('updatePlaylist')
+            if(event.target.id === "listCard--single--remove"){
+                let removeIndex = dataset.playlistindex;
+                app.removeThisSongFrom('playlist', removeIndex);
                 return;
             }
             app.playThisSong(dataset);

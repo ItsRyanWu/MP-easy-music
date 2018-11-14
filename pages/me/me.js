@@ -17,7 +17,8 @@ Page({
     handleSongClick(event){
         let dataset = event.currentTarget.dataset;
         if(event.target.id === "listCard--single--remove"){
-            app.removeThisSongFrom('fav-playlist',dataset);
+            let removeIndex = dataset.playlistindex;
+            app.removeThisSongFrom('fav-playlist', removeIndex);
             return;
         }
         app.playThisSong(dataset);

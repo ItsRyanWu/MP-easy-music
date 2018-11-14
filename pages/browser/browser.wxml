@@ -13,10 +13,10 @@
         </view>
         <view wx:for="{{editorChoiceData}}" class="listCard--single" bindtap="handleSongClick" 
         data-songdata="{{item.songdata}}"data-source="{{item.source}}">
-            <view class="listCard--single--song {{item.source === 'qq' ? 'unavailable' : null}}" selectable="true">
+            <view class="listCard--single--song" selectable="true">
                 {{item.songdata.name}}
             </view>
-            <view class="listCard--single--subInfo {{item.source === 'qq' ? 'unavailable' : null}}">
+            <view class="listCard--single--subInfo">
                 <view wx:for="{{item.songdata.artists}}" class="listCard--single--artist--single">
                     {{item.name}}
                 </view>

@@ -4,11 +4,11 @@
     <image class="searchBoxContainer--listBtn" src="/img/list.svg" mode="aspectFit" bindtap="switchPlaylistShowOff"></image>
     <view class="searchBoxContainer--playlist" hidden="{{!isPlaylistShow}}">
         <view wx:for="{{playlistData}}" class="listCard--single" bindtap="handleSongClick" 
-        data-songdata="{{item.songdata}}"data-source="{{item.source}}">
-           <view class="listCard--single--song {{item.source === 'qq' ? 'unavailable' : null}}" selectable="true">
+        data-songdata="{{item.songdata}}" data-source="{{item.source}}" data-playlistindex="{{index}}">
+            <view class="listCard--single--song" selectable="true">
                 {{item.songdata.name}}
             </view>
-            <view class="listCard--single--subInfo {{item.source === 'qq' ? 'unavailable' : null}}">
+            <view class="listCard--single--subInfo">
                 <view wx:for="{{item.songdata.artists}}" class="listCard--single--artist--single">
                     {{item.name}}
                 </view>
@@ -17,6 +17,7 @@
                     {{item.songdata.album.name}}
                 </view>
             </view>
+            <image class="listCard--single--like" src="/img/close.svg" mode="aspectFit" id="listCard--single--remove"></image>
         </view>
     </view>
     <view class="protectLayer" hidden="{{!isSearchBoxFocus}}" bindtap="turnPlaylistOff"></view>

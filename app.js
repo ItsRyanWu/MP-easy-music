@@ -106,13 +106,9 @@ App({
         wx.setStorageSync(`${whichPlaylist}-data`, listData);
         this.event.emit(`update-${whichPlaylist}`)
     },
-    removeThisSongFrom(whichPlaylist, dataset){
-        console.log(dataset)
+    removeThisSongFrom(whichPlaylist, removeIndex){
         let listData = wx.getStorageSync(`${whichPlaylist}-data`) || [];
-        let removeIndex = listData.indexOf(dataset);
-        console.log(removeIndex)
-        listData = listData.splice(removeIndex, 1);
-        console.log(listData)
+        listData.splice(removeIndex, 1);
         wx.setStorageSync(`${whichPlaylist}-data`, listData);
         this.event.emit(`update-${whichPlaylist}`)
     },

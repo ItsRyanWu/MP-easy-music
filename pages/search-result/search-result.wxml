@@ -18,10 +18,10 @@
         <!-- 搜索情况下显示搜索结果 -->
         <view hidden="{{isSearching}}" wx:for="{{source === 'netease' ? netease : qq}}" bindtap="handleSongClick" bindlongpress="longpressToShowJSON" class="listCard--single" 
         data-songdata="{{item}}" data-source="{{source}}">
-            <view class="listCard--single--song {{source === 'qq' ? 'unavailable' : null}}" selectable="true">
+            <view class="listCard--single--song" selectable="true">
                 {{item.name}}
             </view>
-            <view class="listCard--single--subInfo {{item.source === 'qq' ? 'unavailable' : null}}">
+            <view class="listCard--single--subInfo">
                 <view wx:for="{{item.artists}}" class="listCard--single--artist--single">
                     {{item.name}}
                 </view>
