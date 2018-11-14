@@ -12,7 +12,7 @@
     "navigationBarTextStyle":"black"
   },
   "tabBar":{
-    "color": "#adb3bb",
+    "color": "#222222",
     "selectedColor": "#222222",
     "backgroundColor": "#fff",
     "borderStyle": "black",
@@ -30,7 +30,7 @@
         "selectedIconPath": "/img/star.png"
       },
       {
-        "text": "我的歌单",
+        "text": "我喜欢的",
         "pagePath": "pages/me/me",
         "iconPath": "/img/person-outline.png",
         "selectedIconPath": "/img/person.png"

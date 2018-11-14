@@ -2,39 +2,24 @@
 const app = getApp()
 Page({
     data: {
+        favPlaylistData: null,
         isSearchBoxFoucs: false,
-        searchBarValue: null,
-        isBlur: false
+        isBlur: false,
     },
-    onShow(){
-        // 显示该页时同步 globalData 的 searchBar 值
-        this.setData({searchBarValue: app.globalData.searchBarValue});
+    onLoad(){
+        this.updateFavPlaylist()
+        app.event.on('update-fav-playlist', this.updateFavPlaylist, this)
     },
-    focusSearchBox(){
-        this.setData({isSearchBoxFoucs: true})
+    updateFavPlaylist(){
+        let favPlaylistData = wx.getStorageSync('fav-playlist-data') || [];
+        this.setData({favPlaylistData});
     },
-    unfocusSearchBox(){
-        this.setData({isSearchBoxFoucs: false})
-        // 如果搜索栏为空则清空所有搜索数据，初始化为未搜索状态
-        let globalSearchBarValue = app.globalData.searchBarValue;
-        if (!globalSearchBarValue || /^\s*$/.test(globalSearchBarValue)) {
-            console.log('搜索栏已空，清除所有搜索数据');
-            this.setData({searchBarValue: null})
-        }
-    },
-    syncValueToGlobalData(event){
-        app.syncValueToGlobalData(event)
-    },
-    getSearchKeyWordAndNavigatingToSearchResult(){
-        let searchKeyWord = app.getSearchKeyWord();
-        if (!searchKeyWord || /^\s*$/.test(searchKeyWord)) return;
-        wx.navigateTo({
-            url: `../search-result/search-result?search=${searchKeyWord}`
-        });
-    },
-    playThisSong(event){
+    handleSongClick(event){
         let dataset = event.currentTarget.dataset;
-        // console.log(dataset)
+        if(event.target.id === "listCard--single--remove"){
+            app.removeThisSongFrom('fav-playlist',dataset);
+            return;
+        }
         app.playThisSong(dataset);
-    },
+    }
 })

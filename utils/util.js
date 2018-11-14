@@ -59,9 +59,9 @@ export class Event {
         if(!this._eventCenter[eventName]) return
         // 删除指定的 callback
         let callbacksInThisEvent = this._eventCenter[eventName];
-        for (let callbackToDelete of callbackTrash){
+        for (let itemToDelete of callbackTrash){
             for (let i in callbacksInThisEvent){
-                if (callbackToDelete === callbacksInThisEvent[i].callback) {
+                if (itemToDelete === callbacksInThisEvent[i].callback) {
                     callbacksInThisEvent.splice(i, 1)
                     break
                 }

@@ -5,14 +5,11 @@ Page({
         source: 'netease',
         netease: null,
         qq: null,
-        isSearchBoxFoucs: false,
-        searchBarValue: null,
+        isSearchBoxFocus: false,
         isSearching: false,
         isBlur: false
     },
     onLoad(redirectParameters){
-        // 显示该页时同步 globalData 的 searchBar 值
-        this.setData({searchBarValue: app.globalData.searchBarValue});
         if('search' in redirectParameters){
             console.log('result-page: 接收到搜索命令，开始搜索。')
             let searchKeyWord = redirectParameters.search;
@@ -92,8 +89,13 @@ Page({
             console.log(JSON.stringify(dataset));
         } 
     },
-    playThisSong(event){
+    handleSongClick(event){
         let dataset = event.currentTarget.dataset;
+        if(event.target.id === "listCard--single--like"){
+            app.addThisSongToPlaylist(dataset);
+            app.event.emit('updatePlaylist')
+            return;
+        }
         app.playThisSong(dataset);
     }
 })

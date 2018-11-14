@@ -13,7 +13,7 @@
 		"uglifyFileName": true
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.0.4",
+	"libVersion": "2.2.3",
 	"appid": "wx5b76e624262f7673",
 	"projectname": "MintMusic",
 	"debugOptions": {

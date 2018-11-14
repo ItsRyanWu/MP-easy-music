@@ -7,6 +7,9 @@
 .belowSearchBoxContainer__blur {
     filter: blur(40rpx) saturate(150%);
 }
+.unavailable {
+    color: #b1b1b4 !important;
+}
 .header {
     display: flex;
     margin-top: 100rpx;
@@ -68,7 +71,7 @@
     width: 70%;
     background: linear-gradient(110deg, #f3f5f7 40%, #fff 50%, #f3f5f7 70%);
     background-size: 300% 100%;
-    animation: loadingBackground .8s ease-in-out infinite;
+    animation: loadingBackground .8s ease-in-out infinite .2s;
 }
 .listCard--single--subInfo__loading {
     margin-top: 20rpx;
@@ -76,7 +79,7 @@
     width: 35%;
     background: linear-gradient(110deg, #f3f5f7 40%, #fff 50%, #f3f5f7 70%);
     background-size: 300% 100%;
-    animation: loadingBackground .8s ease-in-out infinite;
+    animation: loadingBackground .8s ease-in-out infinite .2s;
 }
 .listCard {
     min-height: 100vh;
@@ -120,6 +123,13 @@
     content: '/';
     position: relative;
     left: 2rpx;
+}
+.listCard--single--like {
+    position: absolute;
+    width: 50rpx;
+    height: 50rpx;
+    top: 25rpx;
+    right: 40rpx;
 }
 
 @keyframes loadingBackground {

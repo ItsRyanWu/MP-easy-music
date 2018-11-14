@@ -20,12 +20,8 @@ App({
     onLaunch(){
         this.requestForANewEditorChoiceAndSave();
         this.globalData.BackgroundAudioManager = wx.getBackgroundAudioManager();
-        this.event.on('focusSearchBar', function(currentPage){currentPage.setData({isBlur: true})})
-        this.event.on('unfocusSearchBar', function(currentPage){currentPage.setData({isBlur: false})})
-    },
-    syncValueToGlobalData(event){
-        // 监听输入事件同步 serchBar 值至全局变量
-        this.globalData.searchBarValue = event.detail.value;
+        this.event.on('focusSearchBar', function(currentPage){currentPage.setData({isBlur: true, isSearchBoxFocus: true})})
+        this.event.on('unfocusSearchBar', function(currentPage){currentPage.setData({isBlur: false, isSearchBoxFocus: false})})
     },
     getSearchKeyWord(){
         let searchKeyWord = this.globalData.searchBarValue;
@@ -52,24 +48,6 @@ App({
             });
         })
     },
-    // getAlbumImageUrl(songId){
-    //     return new Promise((resolve, reject)=>{
-    //         wx.request({
-    //             url: `https://zeyun.org:3443/song/detail?ids=${songId}`,
-    //             header: {'content-type':'application/json'},
-    //             method: 'GET',
-    //             dataType: 'json',
-    //             responseType: 'text',
-    //             success: (result)=>{
-    //                 resolve(result.data.songs[0].al.picUrl);
-    //             },
-    //             fail: (err)=>{
-    //                 reject(`获取专辑封面 url 错误：${err.errMsg}`)
-    //             },
-    //             complete: ()=>{}
-    //         });
-    //     })
-    // },
     setSongInfoToGlobalData(dataset){
         // 如果已经解析过 songUrl
         if (!dataset.url) {
@@ -121,6 +99,22 @@ App({
         this.setSongInfoToBAM(dataset);
         // 为全局音乐变量设置属性
         this.setSongInfoToGlobalData(dataset);
+    },
+    addThisSongTo(whichPlaylist, dataset){
+        let listData = wx.getStorageSync(`${whichPlaylist}-data`) || [];
+        listData.unshift(dataset)
+        wx.setStorageSync(`${whichPlaylist}-data`, listData);
+        this.event.emit(`update-${whichPlaylist}`)
+    },
+    removeThisSongFrom(whichPlaylist, dataset){
+        console.log(dataset)
+        let listData = wx.getStorageSync(`${whichPlaylist}-data`) || [];
+        let removeIndex = listData.indexOf(dataset);
+        console.log(removeIndex)
+        listData = listData.splice(removeIndex, 1);
+        console.log(listData)
+        wx.setStorageSync(`${whichPlaylist}-data`, listData);
+        this.event.emit(`update-${whichPlaylist}`)
     },
     requestForANewEditorChoiceAndSave(){
         return new Promise((resolve, reject)=>{

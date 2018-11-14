@@ -3,13 +3,10 @@ const app = getApp()
 Page({
     data: {
         editorChoiceData: null,
-        isSearchBoxFoucs: false,
-        searchBarValue: null,
+        isSearchBoxFocus: false,
         isBlur: false
     },
-    onShow(){
-        // 显示该页时同步 globalData 的 searchBar 值
-        this.setData({searchBarValue: app.globalData.searchBarValue});
+    onLoad(){
         try {
             var editorChoiceData = wx.getStorageSync('editor-choice');
             console.log(`读取数据成功：编辑推荐歌单`)
@@ -18,9 +15,12 @@ Page({
         }
         this.setData({editorChoiceData})
     },
-    playThisSong(event){
+    handleSongClick(event){
         let dataset = event.currentTarget.dataset;
-        // console.log(dataset)
+        if(event.target.id === "listCard--single--like"){
+            app.addThisSongTo('fav-playlist', dataset);
+            return;
+        }
         app.playThisSong(dataset);
     }
 })

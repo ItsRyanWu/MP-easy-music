@@ -16,15 +16,12 @@
             <view class="listCard--single--subInfo__loading"></view>
         </view>
         <!-- 搜索情况下显示搜索结果 -->
-        <view hidden="{{isSearching}}" wx:for="{{source === 'netease' ? netease : qq}}" bindtap="playThisSong" bindlongpress="longpressToShowJSON" class="listCard--single" 
+        <view hidden="{{isSearching}}" wx:for="{{source === 'netease' ? netease : qq}}" bindtap="handleSongClick" bindlongpress="longpressToShowJSON" class="listCard--single" 
         data-songdata="{{item}}" data-source="{{source}}">
-            <view class="listCard--single--song" selectable="true">
+            <view class="listCard--single--song {{source === 'qq' ? 'unavailable' : null}}" selectable="true">
                 {{item.name}}
-                <view wx:for="{{item.alias}}" class="listCard--single--song--alias">
-                    ({{item}})
-                </view>
             </view>
-            <view class="listCard--single--subInfo">
+            <view class="listCard--single--subInfo {{item.source === 'qq' ? 'unavailable' : null}}">
                 <view wx:for="{{item.artists}}" class="listCard--single--artist--single">
                     {{item.name}}
                 </view>

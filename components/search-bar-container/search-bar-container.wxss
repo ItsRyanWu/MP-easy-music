@@ -7,9 +7,27 @@
     height: 100rpx;
     background-color: white;
     z-index: 1;
+    box-shadow: 0rpx 30rpx 40rpx -20rpx rgba(95, 95, 95, 0.3);
 }
 .searchBoxContainer__active {
+    /* box-shadow: 0rpx 30rpx 40rpx -20rpx rgba(95, 95, 95, 0.3); */
+}
+.searchBoxContainer--playlist {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    min-height: 200rpx;
+    background-color: white;
     box-shadow: 0rpx 30rpx 40rpx -20rpx rgba(95, 95, 95, 0.3);
+}
+.protectLayer {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
 }
 .searchBoxContainer--searchBox {
     position: absolute;
@@ -25,7 +43,7 @@
 }
 .searchBoxContainer--listBtn {
     position: absolute;
-    width: 80rpx;
+    width: 60rpx;
     height: 80rpx;
     right: 30rpx;
     top: 5%;

@@ -5,18 +5,18 @@
             <text class="header--chart--single">编辑推荐</text>
         </view>
     </view>
-    <view  class="listCard {{isBlur ? 'belowSearchBoxContainer__blur' : null}}">
+    <view class="listCard {{isBlur ? 'belowSearchBoxContainer__blur' : null}}">
         <!-- 缓冲画面 -->
         <view hidden="{{editorChoiceData}}" wx:for="{{[1,2,3,4,5,6,7,8]}}"  class="listCard--single__loading">
             <view class="listCard--single--song__loading"></view>
             <view class="listCard--single--subInfo__loading"></view>
         </view>
-        <view wx:for="{{editorChoiceData}}" class="listCard--single" bindtap="playThisSong" 
+        <view wx:for="{{editorChoiceData}}" class="listCard--single" bindtap="handleSongClick" 
         data-songdata="{{item.songdata}}"data-source="{{item.source}}">
-           <view class="listCard--single--song" selectable="true">
+            <view class="listCard--single--song {{item.source === 'qq' ? 'unavailable' : null}}" selectable="true">
                 {{item.songdata.name}}
             </view>
-            <view class="listCard--single--subInfo">
+            <view class="listCard--single--subInfo {{item.source === 'qq' ? 'unavailable' : null}}">
                 <view wx:for="{{item.songdata.artists}}" class="listCard--single--artist--single">
                     {{item.name}}
                 </view>
@@ -25,6 +25,7 @@
                     {{item.songdata.album.name}}
                 </view>
             </view>
+            <image class="listCard--single--like" src="/img/heart-outline.svg" mode="aspectFit" id="listCard--single--like"></image>
         </view>
     </view>
 </view>

@@ -1,5 +1,23 @@
-<view class="searchBoxContainer {{isSearchBoxFoucs ? 'searchBoxContainer__active' : null}}">
-    <input class="searchBoxContainer--searchBox" type="text" value="{{searchBarValue}}" placeholder="同时搜索「网易云音乐」与「QQ 音乐」" cursor-spacing="20" placeholder-class="input-placeholder" maxlength="20" confirm-type="search" 
-    adjust-position="{{false}}" bindconfirm="handleConfirmSearch" bindtap="focusSearchBox" bindblur="unfocusSearchBox" bindinput="syncValueToGlobalData"></input>
-    <image class="searchBoxContainer--listBtn" src="/img/list.svg" mode="aspectFit"></image> 
+<view class="searchBoxContainer {{isSearchBoxFocus ? 'searchBoxContainer__active' : null}}">
+    <input class="searchBoxContainer--searchBox" type="text" value="{{searchBarValue}}" placeholder="同时搜索「网易云音乐」与「QQ 音乐」" cursor-spacing="20" placeholder-class="input-placeholder" maxlength="20" confirm-type="search" adjust-position="{{false}}" 
+    bindinput="syncSearchbarValueToGlobal" bindconfirm="handleConfirmSearch" bindtap="focusSearchBox" bindblur="unfocusSearchBox"></input>
+    <image class="searchBoxContainer--listBtn" src="/img/list.svg" mode="aspectFit" bindtap="switchPlaylistShowOff"></image>
+    <view class="searchBoxContainer--playlist" hidden="{{!isPlaylistShow}}">
+        <view wx:for="{{playlistData}}" class="listCard--single" bindtap="handleSongClick" 
+        data-songdata="{{item.songdata}}"data-source="{{item.source}}">
+           <view class="listCard--single--song {{item.source === 'qq' ? 'unavailable' : null}}" selectable="true">
+                {{item.songdata.name}}
+            </view>
+            <view class="listCard--single--subInfo {{item.source === 'qq' ? 'unavailable' : null}}">
+                <view wx:for="{{item.songdata.artists}}" class="listCard--single--artist--single">
+                    {{item.name}}
+                </view>
+                -
+                <view class="listCard--single--album">
+                    {{item.songdata.album.name}}
+                </view>
+            </view>
+        </view>
+    </view>
+    <view class="protectLayer" hidden="{{!isSearchBoxFocus}}" bindtap="turnPlaylistOff"></view>
 </view>

@@ -42,11 +42,6 @@ Page({
         })
         app.event.on('nowPlayingChanged', this.syncGlobalNowPlaying, this)
     },
-    onShow(){
-        // 显示该页时同步 globalData 的 searchBar 值
-        this.syncGlobalNowPlaying();
-        this.setData({searchBarValue: app.globalData.searchBarValue});
-    },
     switchPlayPause(){
         let BAM = app.globalData.BackgroundAudioManager;
         if (BAM.paused == undefined ){
