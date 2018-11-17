@@ -3,24 +3,21 @@ const Event = utils.Event
 //app.js
 App({
     globalData: {
-        nowPlaying:{
-            songName: null,
-            artistsName: null,
-            albumName: null,
-            songUrl: null,
-            albumImageUrl: null,
-            songAlias: null,
-            songObjData: null,
-        },
+        nowPlaying: null,
         searchBarValue: null,
         BackgroundAudioManager: null,
         debug: true
     },
     event: new Event(),
+    // 生命周期：启动
     onLaunch(){
+        // 请求最新编辑推荐歌单并储存
         this.requestForANewEditorChoiceAndSave();
+        // 初始化获取 BAM
         this.globalData.BackgroundAudioManager = wx.getBackgroundAudioManager();
+        // 全局监听搜索框聚焦事件
         this.event.on('focusSearchBar', function(currentPage){currentPage.setData({isBlur: true, isSearchBoxFocus: true})})
+        // 全局舰艇搜索框失焦事件
         this.event.on('unfocusSearchBar', function(currentPage){currentPage.setData({isBlur: false, isSearchBoxFocus: false})})
     },
     getSearchKeyWord(){
@@ -100,6 +97,22 @@ App({
         // 为全局音乐变量设置属性
         this.setSongInfoToGlobalData(dataset);
     },
+    playPreNextSong(whichPlaylist, preOrNext){
+        let {index: songIndexInPlaylist, playlistLength} = this.whereThisSongIn(whichPlaylist, this.globalData.nowPlaying);
+        songIndexInPlaylist = Number(songIndexInPlaylist)
+        let nextSongIndexInPlaylist;
+        if (preOrNext === 'next'){
+            // 下一首
+            // 如果歌曲在列表中为最后一首则跳转到第一首
+            nextSongIndexInPlaylist = songIndexInPlaylist === playlistLength-1 ? 0 : songIndexInPlaylist+1;
+        } else {
+            // 上一首
+            // 如果歌曲在列表中为第一首则重复当前歌曲
+            nextSongIndexInPlaylist = songIndexInPlaylist === 0 ? songIndexInPlaylist : songIndexInPlaylist-1;
+        }
+        let listData = wx.getStorageSync(`${whichPlaylist}-data`) || [];
+        this.playThisSong(listData[nextSongIndexInPlaylist]);
+    },
     addThisSongTo(whichPlaylist, dataset){
         let listData = wx.getStorageSync(`${whichPlaylist}-data`) || [];
         listData.unshift(dataset)
@@ -111,6 +124,18 @@ App({
         listData.splice(removeIndex, 1);
         wx.setStorageSync(`${whichPlaylist}-data`, listData);
         this.event.emit(`update-${whichPlaylist}`)
+    },
+    whereThisSongIn(whichPlaylist, dataset){
+        let targetId = dataset.songdata.id;
+        let listData = wx.getStorageSync(`${whichPlaylist}-data`) || [];
+        var iterationId;
+        for(let index in listData){
+            iterationId = listData[index].songdata.id;
+            if(iterationId === targetId){
+                return {index, playlistLength: listData.length}
+            }
+        }
+        return {index: -1, playlistLength: listData.length}
     },
     requestForANewEditorChoiceAndSave(){
         return new Promise((resolve, reject)=>{

@@ -17,12 +17,12 @@
         </view>
         <view class="controlButton">
             <view class="controlButton--container">
-                <view class="controlButton--container--backward"></view>
+                <view class="controlButton--container--backward" bindtap="handleBackward"></view>
                 <view class="controlButton--container--middle" bindtap="switchPlayPause">
                         <view class="controlButton--container--middle-pause-left" style="animation-name:{{playButtonStatus+'-1'}}"></view>
                         <view class="controlButton--container--middle-pause-right" style="animation-name:{{playButtonStatus+'-2'}}"></view>
                 </view>
-                <view class="controlButton--container--forward"></view>
+                <view class="controlButton--container--forward" bindtap="handleForward"></view>
             </view>
         </view>
     </view>

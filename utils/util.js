@@ -26,12 +26,12 @@ export class Event {
      */
     on(eventName, callback, context){
         // 获得该事件的 callback 数组，如果不存在自动创建并向该事件分类 push callbacks 与 context
-        (this._eventCenter[eventName] = this._eventCenter[eventName] || []).push({callback:callback,context:context})
+        (this._eventCenter[eventName] = this._eventCenter[eventName] || []).push({callback, context})
     }
     /**
      * 
      * @param {String} eventName 
-     * @param {*} prop 
+     * @param {*} props 
      */
     emit(eventName, ...props){
         // 对该事件类的 callback 执行并带入参数

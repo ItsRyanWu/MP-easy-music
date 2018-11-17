@@ -83,13 +83,12 @@ page {
     top: 50%;
     transform: translateY(-50%);
     border-radius: 15rpx;
-    opacity: .2;
 }
 .controlButton--container--forward {
-    left: 20%;
+    right: 20%;
 }
 .controlButton--container--backward {
-    right: 20%;
+    left: 20%;
 }
 .controlButton--container--middle {
     position: absolute;

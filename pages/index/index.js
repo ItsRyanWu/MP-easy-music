@@ -22,6 +22,7 @@ Page({
                 this.rollASongFromEditorChoice();
             })
         }
+        app.event.on('nowPlayingChanged', this.syncGlobalNowPlaying, this);
         // 监听事件背景音乐上下文
         app.globalData.BackgroundAudioManager.onPlay(()=>{
             console.log('BAM 开始播放', app.globalData.BackgroundAudioManager)
@@ -37,10 +38,28 @@ Page({
         })
         app.globalData.BackgroundAudioManager.onEnded(()=>{
             console.log('BAM 已结束', app.globalData.BackgroundAudioManager)
-            this.setData({playButtonStatus: 'to-play'});
-            app.setSongInfoToBAM(this.data.nowPlaying);
+            // 自动播放列表内的下一曲
+            app.playPreNextSong('playlist', 'next');
         })
-        app.event.on('nowPlayingChanged', this.syncGlobalNowPlaying, this)
+        app.globalData.BackgroundAudioManager.onCanplay(()=>{
+            console.log('BAM 可播放', app.globalData.BackgroundAudioManager)
+            let {index: songIndexInPlaylist, playlistLength} = app.whereThisSongIn('playlist', app.globalData.nowPlaying);
+            if (songIndexInPlaylist > -1) return;
+            app.addThisSongTo('playlist', app.globalData.nowPlaying)
+        })
+        app.globalData.BackgroundAudioManager.onError((err)=>{
+            console.log('BAM 错误', app.globalData.BackgroundAudioManager, err)
+            this.setData({playButtonStatus: 'to-play'});
+            wx.showToast({
+                title: '这首歌走丢啦，正在找回～',
+                icon: 'none',
+                duration: 1500,
+                mask: true
+            });
+        })
+    },
+    onShow(){
+        this.syncGlobalNowPlaying();
     },
     switchPlayPause(){
         let BAM = app.globalData.BackgroundAudioManager;
@@ -65,9 +84,16 @@ Page({
         let editor_choice = wx.getStorageSync('editor-choice');
         let rollASongIndex = Math.round(Math.random()*(editor_choice.length-1));
         let rollResultData = editor_choice[rollASongIndex];
+        app.addThisSongTo('playlist', rollResultData)
         app.setSongInfoToGlobalData(rollResultData);
     },
     syncGlobalNowPlaying(){
         this.setData({nowPlaying: app.globalData.nowPlaying})
+    },
+    handleBackward(){
+        app.playPreNextSong('playlist', 'pre')
+    },
+    handleForward(){
+        app.playPreNextSong('playlist', 'next')
     }
 })
